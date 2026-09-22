@@ -1,0 +1,1731 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Jarvis Computer consult | Home</title>
+
+    <!-- AUTHENTICATION ROUTE GUARD: User must sign in or sign up before opening website -->
+    <script>
+        (function () {
+            try {
+                const user = JSON.parse(localStorage.getItem("currentUser"));
+                if (!user || !user.email) {
+                    window.location.replace("login.html");
+                }
+            } catch (e) {
+                window.location.replace("login.html");
+            }
+        })();
+    </script>
+
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <!-- Homepage CSS -->
+    <link rel="stylesheet" href="./home.css">
+</head>
+
+<body>
+
+
+
+
+    <!-- ==========================================
+         HEADER
+    =========================================== -->
+
+    <header class="header">
+
+        <div class="header-container">
+
+            <!-- LOGO -->
+            <a href="home.html" class="logo">
+
+                <img src="./images/logo.png" alt="Jarvis Computer Consult Logo" class="brand-logo-img">
+
+                <div class="logo-text modern-brand">
+                    <span class="brand-title">JARVIS</span>
+                    <span class="brand-subtitle">COMPUTER CONSULT</span>
+                </div>
+
+            </a>
+
+
+            <!-- SEARCH -->
+            <div class="search-box">
+
+                <input type="search" id="searchInput" placeholder="Search products...">
+
+                <button type="button" id="searchButton">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </button>
+
+            </div>
+
+
+            <!-- HEADER ACTIONS -->
+            <div class="header-actions">
+
+                <!-- ACCOUNT & LOGOUT -->
+                <div class="user-auth-wrap" id="userAuthWrap">
+                    <a href="login.html" class="header-action" id="accountButton"
+                        style="text-decoration: none; color: inherit;">
+                        <i class="fa-regular fa-user"></i>
+                        <div>
+                            <small id="userGreetingSmall">Hello,</small>
+                            <strong id="userGreetingName">Sign In</strong>
+                        </div>
+                    </a>
+                    <button type="button" class="header-logout-btn" id="logoutButton" title="Sign Out"
+                        style="display: none;">
+                        <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                        <span>Logout</span>
+                    </button>
+                </div>
+
+
+                <!-- CART -->
+                <button class="cart-button" id="cartButton">
+
+                    <i class="fa-solid fa-cart-shopping"></i>
+
+                    <span class="cart-count" id="cartCount">
+                        0
+                    </span>
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </header>
+
+
+    <!-- ==========================================
+         NAVIGATION
+    =========================================== -->
+
+    <nav class="navigation">
+
+        <div class="nav-container">
+
+            <button class="categories-button">
+
+                <i class="fa-solid fa-bars"></i>
+
+                All Categories
+
+                <i class="fa-solid fa-chevron-down"></i>
+
+            </button>
+
+
+            <div class="nav-links">
+
+                <a href="#" class="active">
+                    HOME
+                </a>
+
+                <a href="shop.html">
+                    SHOP
+                </a>
+
+                <a href="#categories">
+                    CATEGORIES
+                </a>
+
+                <a href="#deals">
+                    DEALS
+                </a>
+
+                <a href="#services">
+                    SERVICES
+                </a>
+
+                <i><a href="#about">
+                        About Us
+                    </a></i>
+
+            </div>
+
+        </div>
+
+    </nav>
+
+
+    <!-- ==========================================
+         HERO
+    =========================================== -->
+
+    <main>
+
+        <section class="hero">
+
+            <div class="hero-container">
+
+                <div class="hero-content">
+
+                    <span class="hero-label">
+                        <i class="fa-brands fa-apple"></i> WORLD PREMIERE &bull; iPHONE 18 PRO MAX
+                    </span>
+
+                    <h1>
+                        iPhone 18 Pro Max.
+                        <span>Beyond Pro. Beyond Limits.</span>
+                    </h1>
+
+                    <p>
+                        Engineered with Apple A19 Pro 3nm Quantum Bionic silicon, futuristic edge-to-edge holographic
+                        Super Retina XDR OLED, and Grade 5 aerospace brushed titanium. Now available for pre-order at
+                        Jarvis Computer Consult.
+                    </p>
+
+                    <div class="hero-buttons">
+
+                        <a href="product.html?id=29" class="primary-button">
+                            <i class="fa-solid fa-bolt"></i>
+                            Pre-Order iPhone 18
+                        </a>
+
+                        <a href="#shop" class="secondary-button">
+                            Explore All Products
+                        </a>
+
+                    </div>
+
+                    <div class="hero-spec-row">
+                        <span class="spec-chip"><i class="fa-solid fa-microchip"></i> A19 Pro Bionic</span>
+                        <span class="spec-chip"><i class="fa-solid fa-wand-magic-sparkles"></i> Holographic OLED</span>
+                        <span class="spec-chip"><i class="fa-solid fa-camera"></i> 200MP Quad Fusion</span>
+                        <span class="spec-chip"><i class="fa-solid fa-tag"></i> GH₵ 19,999</span>
+                    </div>
+
+                </div>
+
+
+                <div class="hero-visual">
+
+                    <!-- Ambient Glow -->
+                    <div class="hero-ambient-glow"></div>
+
+                    <!-- Floating Badges -->
+                    <div class="floating-pill pill-top">
+                        <i class="fa-solid fa-mobile-screen-button"></i>
+                        <div>
+                            <strong>Phone Shop</strong>
+                            <span>Latest arrivals</span>
+                        </div>
+                    </div>
+
+                    <div class="floating-pill pill-bottom">
+                        <i class="fa-solid fa-headphones"></i>
+                        <div>
+                            <strong>Accessories Hub</strong>
+                            <span>100% Genuine</span>
+                        </div>
+                    </div>
+
+                    <!-- DUAL STREAM OF FLOATING PHONES & ACCESSORIES -->
+                    <div class="floating-stream-wrapper">
+
+                        <!-- COLUMN 1: Floating Upward -->
+                        <div class="stream-column stream-up">
+                            <div class="stream-track">
+                                <a href="shop.html?category=phones" class="stream-card">
+                                    <img src="images/phone.jpg" alt="Smartphone">
+                                    <div class="stream-card-info">
+                                        <span class="stream-tag phone">Phones</span>
+                                        <h4>Samsung Galaxy</h4>
+                                        <strong class="stream-price">GH₵ 2,899</strong>
+                                    </div>
+                                </a>
+
+                                <a href="shop.html?category=accessories" class="stream-card">
+                                    <img src="images/earbuds.jpg" alt="Wireless Earbuds">
+                                    <div class="stream-card-info">
+                                        <span class="stream-tag audio">Accessories</span>
+                                        <h4>Pro Earbuds</h4>
+                                        <strong class="stream-price">GH₵ 349</strong>
+                                    </div>
+                                </a>
+
+                                <a href="shop.html?category=phones" class="stream-card">
+                                    <img src="images/phoneshop.jpg" alt="Phone Shop">
+                                    <div class="stream-card-info">
+                                        <span class="stream-tag shop">Phone Shop</span>
+                                        <h4>Tech & Gadgets</h4>
+                                        <strong class="stream-price">In Stock</strong>
+                                    </div>
+                                </a>
+
+                                <a href="shop.html?category=accessories" class="stream-card">
+                                    <img src="images/charger.jpg" alt="Fast Charger">
+                                    <div class="stream-card-info">
+                                        <span class="stream-tag power">Charging</span>
+                                        <h4>65W Fast Charger</h4>
+                                        <strong class="stream-price">GH₵ 199</strong>
+                                    </div>
+                                </a>
+
+                                <a href="shop.html?category=accessories" class="stream-card">
+                                    <img src="images/smartwatch.jpg" alt="Smart Watch">
+                                    <div class="stream-card-info">
+                                        <span class="stream-tag watch">Wearables</span>
+                                        <h4>Smart Watch Ultra</h4>
+                                        <strong class="stream-price">GH₵ 699</strong>
+                                    </div>
+                                </a>
+
+                                <!-- Duplicate for seamless infinite loop -->
+                                <a href="shop.html?category=phones" class="stream-card">
+                                    <img src="images/phone.jpg" alt="Smartphone">
+                                    <div class="stream-card-info">
+                                        <span class="stream-tag phone">Phones</span>
+                                        <h4>Samsung Galaxy</h4>
+                                        <strong class="stream-price">GH₵ 2,899</strong>
+                                    </div>
+                                </a>
+
+                                <a href="shop.html?category=accessories" class="stream-card">
+                                    <img src="images/earbuds.jpg" alt="Wireless Earbuds">
+                                    <div class="stream-card-info">
+                                        <span class="stream-tag audio">Accessories</span>
+                                        <h4>Pro Earbuds</h4>
+                                        <strong class="stream-price">GH₵ 349</strong>
+                                    </div>
+                                </a>
+
+                                <a href="shop.html?category=phones" class="stream-card">
+                                    <img src="images/phoneshop.jpg" alt="Phone Shop">
+                                    <div class="stream-card-info">
+                                        <span class="stream-tag shop">Phone Shop</span>
+                                        <h4>Tech & Gadgets</h4>
+                                        <strong class="stream-price">In Stock</strong>
+                                    </div>
+                                </a>
+
+                                <a href="shop.html?category=accessories" class="stream-card">
+                                    <img src="images/charger.jpg" alt="Fast Charger">
+                                    <div class="stream-card-info">
+                                        <span class="stream-tag power">Charging</span>
+                                        <h4>65W Fast Charger</h4>
+                                        <strong class="stream-price">GH₵ 199</strong>
+                                    </div>
+                                </a>
+
+                                <a href="shop.html?category=accessories" class="stream-card">
+                                    <img src="images/smartwatch.jpg" alt="Smart Watch">
+                                    <div class="stream-card-info">
+                                        <span class="stream-tag watch">Wearables</span>
+                                        <h4>Smart Watch Ultra</h4>
+                                        <strong class="stream-price">GH₵ 699</strong>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- COLUMN 2: Floating Downward -->
+                        <div class="stream-column stream-down">
+                            <div class="stream-track">
+                                <a href="shop.html?category=phones" class="stream-card">
+                                    <img src="images/iphone.jpg" alt="iPhone Store">
+                                    <div class="stream-card-info">
+                                        <span class="stream-tag apple">Flagship</span>
+                                        <h4>Apple iPhone Hub</h4>
+                                        <strong class="stream-price">Hot Deal</strong>
+                                    </div>
+                                </a>
+
+                                <a href="shop.html?category=accessories" class="stream-card">
+                                    <img src="images/headphones.jpg" alt="Headphones">
+                                    <div class="stream-card-info">
+                                        <span class="stream-tag audio">Accessories</span>
+                                        <h4>Studio Headphones</h4>
+                                        <strong class="stream-price">GH₵ 499</strong>
+                                    </div>
+                                </a>
+
+                                <a href="shop.html?category=accessories" class="stream-card">
+                                    <img src="images/phoneshop.jpg" alt="Phone Accessories Store">
+                                    <div class="stream-card-info">
+                                        <span class="stream-tag shop">Phone Shop</span>
+                                        <h4>Phone Store Display</h4>
+                                        <strong class="stream-price">Accessories</strong>
+                                    </div>
+                                </a>
+
+                                <a href="shop.html?category=accessories" class="stream-card">
+                                    <img src="images/speaker.jpg" alt="Bluetooth Speaker">
+                                    <div class="stream-card-info">
+                                        <span class="stream-tag audio">Sound</span>
+                                        <h4>Wireless Speaker</h4>
+                                        <strong class="stream-price">GH₵ 599</strong>
+                                    </div>
+                                </a>
+
+                                <a href="shop.html?category=accessories" class="stream-card">
+                                    <img src="images/mouse.jpg" alt="Gaming Mouse">
+                                    <div class="stream-card-info">
+                                        <span class="stream-tag tech">Accessories</span>
+                                        <h4>Wireless Mouse</h4>
+                                        <strong class="stream-price">GH₵ 249</strong>
+                                    </div>
+                                </a>
+
+                                <!-- Duplicate for seamless infinite loop -->
+                                <a href="shop.html?category=phones" class="stream-card">
+                                    <img src="images/iphone.jpg" alt="iPhone Store">
+                                    <div class="stream-card-info">
+                                        <span class="stream-tag apple">Flagship</span>
+                                        <h4>Apple iPhone Hub</h4>
+                                        <strong class="stream-price">Hot Deal</strong>
+                                    </div>
+                                </a>
+
+                                <a href="shop.html?category=accessories" class="stream-card">
+                                    <img src="images/headphones.jpg" alt="Headphones">
+                                    <div class="stream-card-info">
+                                        <span class="stream-tag audio">Accessories</span>
+                                        <h4>Studio Headphones</h4>
+                                        <strong class="stream-price">GH₵ 499</strong>
+                                    </div>
+                                </a>
+
+                                <a href="shop.html?category=accessories" class="stream-card">
+                                    <img src="images/phoneshop.jpg" alt="Phone Accessories Store">
+                                    <div class="stream-card-info">
+                                        <span class="stream-tag shop">Phone Shop</span>
+                                        <h4>Phone Store Display</h4>
+                                        <strong class="stream-price">Accessories</strong>
+                                    </div>
+                                </a>
+
+                                <a href="shop.html?category=accessories" class="stream-card">
+                                    <img src="images/speaker.jpg" alt="Bluetooth Speaker">
+                                    <div class="stream-card-info">
+                                        <span class="stream-tag audio">Sound</span>
+                                        <h4>Wireless Speaker</h4>
+                                        <strong class="stream-price">GH₵ 599</strong>
+                                    </div>
+                                </a>
+
+                                <a href="shop.html?category=accessories" class="stream-card">
+                                    <img src="images/mouse.jpg" alt="Gaming Mouse">
+                                    <div class="stream-card-info">
+                                        <span class="stream-tag tech">Accessories</span>
+                                        <h4>Wireless Mouse</h4>
+                                        <strong class="stream-price">GH₵ 249</strong>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ==========================================
+             CATEGORIES
+        =========================================== -->
+
+        <section class="section" id="categories">
+
+            <div class="section-heading">
+
+                <div>
+                    <span class="section-label">
+                        EXPLORE
+                    </span>
+
+                    <h2>
+                        Shop by Category
+                    </h2>
+                </div>
+
+                <a href="shop.html">
+                    View all
+                    <i class="fa-solid fa-arrow-right"></i>
+                </a>
+
+            </div>
+
+
+            <div class="category-grid">
+
+                <a href="shop.html?category=phones" class="category-card" data-category="phones">
+
+                    <div class="category-icon">
+                        <i class="fa-solid fa-mobile-screen-button"></i>
+                    </div>
+
+                    <h3>
+                        Phones
+                    </h3>
+
+                    <span>
+                        Smartphones & Deals
+                    </span>
+
+                </a>
+
+
+                <a href="shop.html?category=computers" class="category-card" data-category="computers">
+
+                    <div class="category-icon">
+                        <i class="fa-solid fa-laptop"></i>
+                    </div>
+
+                    <h3>
+                        Computers
+                    </h3>
+
+                    <span>
+                        Laptops & Desktops
+                    </span>
+
+                </a>
+
+
+                <a href="shop.html?category=accessories" class="category-card" data-category="accessories">
+
+                    <div class="category-icon">
+                        <i class="fa-solid fa-headphones"></i>
+                    </div>
+
+                    <h3>
+                        Accessories
+                    </h3>
+
+                    <span>
+                        Audio & Gadgets
+                    </span>
+
+                </a>
+
+
+                <a href="shop.html?category=fashion" class="category-card" data-category="fashion">
+
+                    <div class="category-icon">
+                        <i class="fa-solid fa-shirt"></i>
+                    </div>
+
+                    <h3>
+                        Fashion
+                    </h3>
+
+                    <span>
+                        Apparel & Wear
+                    </span>
+
+                </a>
+
+
+                <a href="shop.html?category=office" class="category-card" data-category="office">
+
+                    <div class="category-icon">
+                        <i class="fa-solid fa-house"></i>
+                    </div>
+
+                    <h3>
+                        Home & Office
+                    </h3>
+
+                    <span>
+                        Chairs & Desk Gear
+                    </span>
+
+                </a>
+
+
+                <a href="shop.html?category=services" class="category-card" data-category="services">
+
+                    <div class="category-icon">
+                        <i class="fa-solid fa-palette"></i>
+                    </div>
+
+                    <h3>
+                        Design Services
+                    </h3>
+
+                    <span>
+                        Branding & Graphics
+                    </span>
+
+                </a>
+
+
+                <a href="shop.html?category=gaming" class="category-card" data-category="gaming">
+
+                    <div class="category-icon">
+                        <i class="fa-solid fa-gamepad"></i>
+                    </div>
+
+                    <h3>
+                        Gaming & Consoles
+                    </h3>
+
+                    <span>
+                        Consoles & Esports
+                    </span>
+
+                </a>
+
+
+                <a href="shop.html?category=networking" class="category-card" data-category="networking">
+
+                    <div class="category-icon">
+                        <i class="fa-solid fa-wifi"></i>
+                    </div>
+
+                    <h3>
+                        Networking & CCTV
+                    </h3>
+
+                    <span>
+                        Routers & Security
+                    </span>
+
+                </a>
+
+
+                <a href="shop.html?category=storage" class="category-card" data-category="storage">
+
+                    <div class="category-icon">
+                        <i class="fa-solid fa-hard-drive"></i>
+                    </div>
+
+                    <h3>
+                        Storage & Memory
+                    </h3>
+
+                    <span>
+                        Portable SSDs & HDDs
+                    </span>
+
+                </a>
+
+
+                <a href="shop.html?category=printers" class="category-card" data-category="printers">
+
+                    <div class="category-icon">
+                        <i class="fa-solid fa-print"></i>
+                    </div>
+
+                    <h3>
+                        Printers & Scanners
+                    </h3>
+
+                    <span>
+                        Laser & All-in-One
+                    </span>
+
+                </a>
+
+            </div>
+
+        </section>
+
+
+        <!-- ==========================================
+             FEATURED PRODUCTS
+        =========================================== -->
+
+        <section class="section products-section" id="shop">
+
+            <div class="section-heading">
+
+                <div>
+
+                    <span class="section-label">
+                        OUR PRODUCTS
+                    </span>
+
+                    <h2>
+                        Featured Products
+                    </h2>
+
+                </div>
+
+                <a href="shop.html">
+                    View all
+                    <i class="fa-solid fa-arrow-right"></i>
+                </a>
+
+            </div>
+
+
+            <div class="product-grid">
+
+
+                <!-- PRODUCT 1 -->
+                <article class="product-card">
+
+                    <div class="product-image">
+
+                        <span class="product-badge">
+                            NEW
+                        </span>
+
+                        <button class="wishlist-button" aria-label="Add Premium Laptop to wishlist">
+                            <i class="fa-regular fa-heart"></i>
+                        </button>
+
+                        <a href="product.html?id=1" style="display:contents;">
+                            <img src="images/laptop.jpg" alt="Premium Laptop" class="product-img" loading="lazy">
+                        </a>
+
+                    </div>
+
+                    <div class="product-info">
+
+                        <span class="product-category">
+                            Computers
+                        </span>
+
+                        <h3>
+                            <a href="product.html?id=1" style="color: inherit; text-decoration: none;">
+                                Premium Laptop
+                            </a>
+                        </h3>
+
+                        <div class="rating">
+
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+
+                            <span>
+                                (24)
+                            </span>
+
+                        </div>
+
+                        <div class="product-bottom">
+
+                            <strong>
+                                GH₵ 5,499
+                            </strong>
+
+                            <button class="add-cart" data-name="Premium Laptop" data-price="5499"
+                                data-image="images/laptop.jpg">
+                                <i class="fa-solid fa-plus"></i>
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+
+                <!-- PRODUCT 2 -->
+                <article class="product-card">
+
+                    <div class="product-image">
+
+                        <span class="product-badge sale">
+                            SALE
+                        </span>
+
+                        <button class="wishlist-button" aria-label="Add Smartphone to wishlist">
+                            <i class="fa-regular fa-heart"></i>
+                        </button>
+
+                        <a href="product.html?id=2" style="display:contents;">
+                            <img src="images/phone.jpg" alt="Smartphone" class="product-img" loading="lazy">
+                        </a>
+
+                    </div>
+
+                    <div class="product-info">
+
+                        <span class="product-category">
+                            Phones
+                        </span>
+
+                        <h3>
+                            <a href="product.html?id=2" style="color: inherit; text-decoration: none;">
+                                Smartphone
+                            </a>
+                        </h3>
+
+                        <div class="rating">
+
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-regular fa-star"></i>
+
+                            <span>
+                                (18)
+                            </span>
+
+                        </div>
+
+                        <div class="product-bottom">
+
+                            <strong>
+                                GH₵ 2,899
+                            </strong>
+
+                            <button class="add-cart" data-name="Smartphone" data-price="2899"
+                                data-image="images/phone.jpg">
+                                <i class="fa-solid fa-plus"></i>
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+
+                <!-- PRODUCT 3 -->
+                <article class="product-card">
+
+                    <div class="product-image">
+
+                        <button class="wishlist-button" aria-label="Add Wireless Headphones to wishlist">
+                            <i class="fa-regular fa-heart"></i>
+                        </button>
+
+                        <a href="product.html?id=3" style="display:contents;">
+                            <img src="images/headphones.jpg" alt="Wireless Headphones" class="product-img"
+                                loading="lazy">
+                        </a>
+
+                    </div>
+
+                    <div class="product-info">
+
+                        <span class="product-category">
+                            Accessories
+                        </span>
+
+                        <h3>
+                            <a href="product.html?id=3" style="color: inherit; text-decoration: none;">
+                                Wireless Headphones
+                            </a>
+                        </h3>
+
+                        <div class="rating">
+
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+
+                            <span>
+                                (31)
+                            </span>
+
+                        </div>
+
+                        <div class="product-bottom">
+
+                            <strong>
+                                GH₵ 499
+                            </strong>
+
+                            <button class="add-cart" data-name="Wireless Headphones" data-price="499"
+                                data-image="images/headphones.jpg">
+                                <i class="fa-solid fa-plus"></i>
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+
+                <!-- PRODUCT 4 -->
+                <article class="product-card">
+
+                    <div class="product-image">
+
+                        <span class="product-badge">
+                            POPULAR
+                        </span>
+
+                        <button class="wishlist-button" aria-label="Add Wireless Keyboard to wishlist">
+                            <i class="fa-regular fa-heart"></i>
+                        </button>
+
+                        <a href="product.html?id=4" style="display:contents;">
+                            <img src="images/keyboard.jpg" alt="Wireless Keyboard" class="product-img" loading="lazy">
+                        </a>
+
+                    </div>
+
+                    <div class="product-info">
+
+                        <span class="product-category">
+                            Accessories
+                        </span>
+
+                        <h3>
+                            <a href="product.html?id=4" style="color: inherit; text-decoration: none;">
+                                Wireless Keyboard
+                            </a>
+                        </h3>
+
+                        <div class="rating">
+
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-regular fa-star"></i>
+
+                            <span>
+                                (16)
+                            </span>
+
+                        </div>
+
+                        <div class="product-bottom">
+
+                            <strong>
+                                GH₵ 299
+                            </strong>
+
+                            <button class="add-cart" data-name="Wireless Keyboard" data-price="299"
+                                data-image="images/keyboard.jpg">
+                                <i class="fa-solid fa-plus"></i>
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+
+                <!-- PRODUCT: PS5 Pro Console -->
+                <article class="product-card">
+
+                    <div class="product-image">
+                        <span class="product-badge">HOT</span>
+                        <button class="wishlist-button" aria-label="Add PlayStation 5 Pro to wishlist">
+                            <i class="fa-regular fa-heart"></i>
+                        </button>
+                        <a href="product.html?id=16" style="display:contents;">
+                            <img src="images/console.jpg" alt="PlayStation 5 Pro Console" class="product-img"
+                                loading="lazy">
+                        </a>
+                    </div>
+
+                    <div class="product-info">
+                        <span class="product-category">Gaming</span>
+                        <h3>
+                            <a href="product.html?id=16" style="color: inherit; text-decoration: none;">
+                                PlayStation 5 Pro Console
+                            </a>
+                        </h3>
+                        <div class="rating">
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <span>(48)</span>
+                        </div>
+                        <div class="product-bottom">
+                            <strong>GH₵ 8,999</strong>
+                            <button class="add-cart" data-name="PlayStation 5 Pro Console" data-price="8999"
+                                data-image="images/console.jpg">
+                                <i class="fa-solid fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                </article>
+
+
+                <!-- PRODUCT: Wi-Fi 6 Router -->
+                <article class="product-card">
+
+                    <div class="product-image">
+                        <span class="product-badge">POPULAR</span>
+                        <button class="wishlist-button" aria-label="Add Wi-Fi 6 Router to wishlist">
+                            <i class="fa-regular fa-heart"></i>
+                        </button>
+                        <a href="product.html?id=17" style="display:contents;">
+                            <img src="images/router.jpg" alt="Wi-Fi 6 Gigabit Smart Router" class="product-img"
+                                loading="lazy">
+                        </a>
+                    </div>
+
+                    <div class="product-info">
+                        <span class="product-category">Networking</span>
+                        <h3>
+                            <a href="product.html?id=17" style="color: inherit; text-decoration: none;">
+                                Wi-Fi 6 Gigabit Smart Router
+                            </a>
+                        </h3>
+                        <div class="rating">
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star-half-stroke"></i>
+                            <span>(32)</span>
+                        </div>
+                        <div class="product-bottom">
+                            <strong>GH₵ 799</strong>
+                            <button class="add-cart" data-name="Wi-Fi 6 Gigabit Smart Router" data-price="799"
+                                data-image="images/router.jpg">
+                                <i class="fa-solid fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                </article>
+
+
+                <!-- PRODUCT: Smart CCTV Camera -->
+                <article class="product-card">
+
+                    <div class="product-image">
+                        <span class="product-badge">SECURITY</span>
+                        <button class="wishlist-button" aria-label="Add Smart 4K CCTV Camera to wishlist">
+                            <i class="fa-regular fa-heart"></i>
+                        </button>
+                        <a href="product.html?id=18" style="display:contents;">
+                            <img src="images/camera.jpg" alt="Smart 4K Security CCTV Camera" class="product-img"
+                                loading="lazy">
+                        </a>
+                    </div>
+
+                    <div class="product-info">
+                        <span class="product-category">Networking</span>
+                        <h3>
+                            <a href="product.html?id=18" style="color: inherit; text-decoration: none;">
+                                Smart 4K Security CCTV Camera
+                            </a>
+                        </h3>
+                        <div class="rating">
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <span>(29)</span>
+                        </div>
+                        <div class="product-bottom">
+                            <strong>GH₵ 850</strong>
+                            <button class="add-cart" data-name="Smart 4K Security CCTV Camera" data-price="850"
+                                data-image="images/camera.jpg">
+                                <i class="fa-solid fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                </article>
+
+
+                <!-- PRODUCT: Portable NVMe SSD -->
+                <article class="product-card">
+
+                    <div class="product-image">
+                        <span class="product-badge">FAST</span>
+                        <button class="wishlist-button" aria-label="Add 1TB Portable NVMe SSD to wishlist">
+                            <i class="fa-regular fa-heart"></i>
+                        </button>
+                        <a href="product.html?id=19" style="display:contents;">
+                            <img src="images/ssd.jpg" alt="1TB Rugged High-Speed Portable SSD" class="product-img"
+                                loading="lazy">
+                        </a>
+                    </div>
+
+                    <div class="product-info">
+                        <span class="product-category">Storage</span>
+                        <h3>
+                            <a href="product.html?id=19" style="color: inherit; text-decoration: none;">
+                                1TB Rugged High-Speed Portable SSD
+                            </a>
+                        </h3>
+                        <div class="rating">
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <span>(37)</span>
+                        </div>
+                        <div class="product-bottom">
+                            <strong>GH₵ 1,250</strong>
+                            <button class="add-cart" data-name="1TB Rugged High-Speed Portable SSD" data-price="1250"
+                                data-image="images/ssd.jpg">
+                                <i class="fa-solid fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                </article>
+
+
+                <!-- PRODUCT: Color Laser Printer -->
+                <article class="product-card">
+
+                    <div class="product-image">
+                        <span class="product-badge">OFFICE</span>
+                        <button class="wishlist-button" aria-label="Add Wireless Color Laser Printer to wishlist">
+                            <i class="fa-regular fa-heart"></i>
+                        </button>
+                        <a href="product.html?id=20" style="display:contents;">
+                            <img src="images/printer.jpg" alt="All-in-One Wireless Color Laser Printer"
+                                class="product-img" loading="lazy">
+                        </a>
+                    </div>
+
+                    <div class="product-info">
+                        <span class="product-category">Printers</span>
+                        <h3>
+                            <a href="product.html?id=20" style="color: inherit; text-decoration: none;">
+                                All-in-One Wireless Color Laser Printer
+                            </a>
+                        </h3>
+                        <div class="rating">
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star-half-stroke"></i>
+                            <span>(21)</span>
+                        </div>
+                        <div class="product-bottom">
+                            <strong>GH₵ 3,450</strong>
+                            <button class="add-cart" data-name="All-in-One Wireless Color Laser Printer"
+                                data-price="3450" data-image="images/printer.jpg">
+                                <i class="fa-solid fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                </article>
+
+
+                <!-- PRODUCT: RGB Gaming Headset -->
+                <article class="product-card">
+
+                    <div class="product-image">
+                        <span class="product-badge">RGB</span>
+                        <button class="wishlist-button" aria-label="Add RGB Esports Gaming Headset to wishlist">
+                            <i class="fa-regular fa-heart"></i>
+                        </button>
+                        <a href="product.html?id=21" style="display:contents;">
+                            <img src="images/gaming_headset.jpg" alt="RGB Esports Gaming Headset" class="product-img"
+                                loading="lazy">
+                        </a>
+                    </div>
+
+                    <div class="product-info">
+                        <span class="product-category">Gaming</span>
+                        <h3>
+                            <a href="product.html?id=21" style="color: inherit; text-decoration: none;">
+                                RGB Esports Gaming Headset
+                            </a>
+                        </h3>
+                        <div class="rating">
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <span>(44)</span>
+                        </div>
+                        <div class="product-bottom">
+                            <strong>GH₵ 650</strong>
+                            <button class="add-cart" data-name="RGB Esports Gaming Headset" data-price="650"
+                                data-image="images/gaming_headset.jpg">
+                                <i class="fa-solid fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                </article>
+
+
+                <!-- PRODUCT: External Hard Drive -->
+                <article class="product-card">
+
+                    <div class="product-image">
+                        <span class="product-badge">BACKUP</span>
+                        <button class="wishlist-button" aria-label="Add 2TB External Backup Hard Drive to wishlist">
+                            <i class="fa-regular fa-heart"></i>
+                        </button>
+                        <a href="product.html?id=22" style="display:contents;">
+                            <img src="images/harddrive.jpg" alt="2TB Slim External Backup Hard Drive"
+                                class="product-img" loading="lazy">
+                        </a>
+                    </div>
+
+                    <div class="product-info">
+                        <span class="product-category">Storage</span>
+                        <h3>
+                            <a href="product.html?id=22" style="color: inherit; text-decoration: none;">
+                                2TB Slim External Backup Hard Drive
+                            </a>
+                        </h3>
+                        <div class="rating">
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-regular fa-star"></i>
+                            <span>(26)</span>
+                        </div>
+                        <div class="product-bottom">
+                            <strong>GH₵ 699</strong>
+                            <button class="add-cart" data-name="2TB Slim External Backup Hard Drive" data-price="699"
+                                data-image="images/harddrive.jpg">
+                                <i class="fa-solid fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                </article>
+
+
+                <!-- PRODUCT: iPhone 16 Pro Max -->
+                <article class="product-card">
+
+                    <div class="product-image">
+                        <span class="product-badge">FLAGSHIP</span>
+                        <button class="wishlist-button" aria-label="Add iPhone 16 Pro Max to wishlist">
+                            <i class="fa-regular fa-heart"></i>
+                        </button>
+                        <a href="product.html?id=23" style="display:contents;">
+                            <img src="images/iphone16.jpg" alt="Apple iPhone 16 Pro Max" class="product-img"
+                                loading="lazy">
+                        </a>
+                    </div>
+
+                    <div class="product-info">
+                        <span class="product-category">Phones</span>
+                        <h3>
+                            <a href="product.html?id=23" style="color: inherit; text-decoration: none;">
+                                Apple iPhone 16 Pro Max
+                            </a>
+                        </h3>
+                        <div class="rating">
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <span>(54)</span>
+                        </div>
+                        <div class="product-bottom">
+                            <strong>GH₵ 16,999</strong>
+                            <button class="add-cart" data-name="Apple iPhone 16 Pro Max" data-price="16999"
+                                data-image="images/iphone16.jpg">
+                                <i class="fa-solid fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                </article>
+
+
+                <!-- PRODUCT: Samsung Galaxy S24 Ultra -->
+                <article class="product-card">
+
+                    <div class="product-image">
+                        <span class="product-badge">GALAXY AI</span>
+                        <button class="wishlist-button" aria-label="Add Samsung Galaxy S24 Ultra to wishlist">
+                            <i class="fa-regular fa-heart"></i>
+                        </button>
+                        <a href="product.html?id=24" style="display:contents;">
+                            <img src="images/s24ultra.jpg" alt="Samsung Galaxy S24 Ultra" class="product-img"
+                                loading="lazy">
+                        </a>
+                    </div>
+
+                    <div class="product-info">
+                        <span class="product-category">Phones</span>
+                        <h3>
+                            <a href="product.html?id=24" style="color: inherit; text-decoration: none;">
+                                Samsung Galaxy S24 Ultra
+                            </a>
+                        </h3>
+                        <div class="rating">
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <span>(49)</span>
+                        </div>
+                        <div class="product-bottom">
+                            <strong>GH₵ 14,500</strong>
+                            <button class="add-cart" data-name="Samsung Galaxy S24 Ultra" data-price="14500"
+                                data-image="images/s24ultra.jpg">
+                                <i class="fa-solid fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                </article>
+
+
+                <!-- PRODUCT: Google Pixel 9 Pro -->
+                <article class="product-card">
+
+                    <div class="product-image">
+                        <span class="product-badge">GEMINI AI</span>
+                        <button class="wishlist-button" aria-label="Add Google Pixel 9 Pro to wishlist">
+                            <i class="fa-regular fa-heart"></i>
+                        </button>
+                        <a href="product.html?id=25" style="display:contents;">
+                            <img src="images/pixel9.jpg" alt="Google Pixel 9 Pro" class="product-img" loading="lazy">
+                        </a>
+                    </div>
+
+                    <div class="product-info">
+                        <span class="product-category">Phones</span>
+                        <h3>
+                            <a href="product.html?id=25" style="color: inherit; text-decoration: none;">
+                                Google Pixel 9 Pro
+                            </a>
+                        </h3>
+                        <div class="rating">
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star-half-stroke"></i>
+                            <span>(33)</span>
+                        </div>
+                        <div class="product-bottom">
+                            <strong>GH₵ 11,800</strong>
+                            <button class="add-cart" data-name="Google Pixel 9 Pro" data-price="11800"
+                                data-image="images/pixel9.jpg">
+                                <i class="fa-solid fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                </article>
+
+
+                <!-- PRODUCT: MacBook Pro 16" M3 Max -->
+                <article class="product-card">
+
+                    <div class="product-image">
+                        <span class="product-badge">M3 MAX</span>
+                        <button class="wishlist-button" aria-label="Add Apple MacBook Pro 16 to wishlist">
+                            <i class="fa-regular fa-heart"></i>
+                        </button>
+                        <a href="product.html?id=26" style="display:contents;">
+                            <img src="images/macbook.jpg" alt="Apple MacBook Pro 16 M3 Max" class="product-img"
+                                loading="lazy">
+                        </a>
+                    </div>
+
+                    <div class="product-info">
+                        <span class="product-category">Computers</span>
+                        <h3>
+                            <a href="product.html?id=26" style="color: inherit; text-decoration: none;">
+                                Apple MacBook Pro 16" M3 Max
+                            </a>
+                        </h3>
+                        <div class="rating">
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <span>(38)</span>
+                        </div>
+                        <div class="product-bottom">
+                            <strong>GH₵ 24,999</strong>
+                            <button class="add-cart" data-name="Apple MacBook Pro 16 M3 Max" data-price="24999"
+                                data-image="images/macbook.jpg">
+                                <i class="fa-solid fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                </article>
+
+
+                <!-- PRODUCT: Dell XPS 16 OLED -->
+                <article class="product-card">
+
+                    <div class="product-image">
+                        <span class="product-badge">OLED 4K</span>
+                        <button class="wishlist-button" aria-label="Add Dell XPS 16 OLED to wishlist">
+                            <i class="fa-regular fa-heart"></i>
+                        </button>
+                        <a href="product.html?id=27" style="display:contents;">
+                            <img src="images/dellxps.jpg" alt="Dell XPS 16 OLED Laptop" class="product-img"
+                                loading="lazy">
+                        </a>
+                    </div>
+
+                    <div class="product-info">
+                        <span class="product-category">Computers</span>
+                        <h3>
+                            <a href="product.html?id=27" style="color: inherit; text-decoration: none;">
+                                Dell XPS 16 OLED Laptop
+                            </a>
+                        </h3>
+                        <div class="rating">
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star-half-stroke"></i>
+                            <span>(27)</span>
+                        </div>
+                        <div class="product-bottom">
+                            <strong>GH₵ 19,500</strong>
+                            <button class="add-cart" data-name="Dell XPS 16 OLED Laptop" data-price="19500"
+                                data-image="images/dellxps.jpg">
+                                <i class="fa-solid fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                </article>
+
+
+                <!-- PRODUCT: ASUS ROG Strix SCAR 18 -->
+                <article class="product-card">
+
+                    <div class="product-image">
+                        <span class="product-badge">RTX 4090</span>
+                        <button class="wishlist-button" aria-label="Add ASUS ROG Strix SCAR 18 to wishlist">
+                            <i class="fa-regular fa-heart"></i>
+                        </button>
+                        <a href="product.html?id=28" style="display:contents;">
+                            <img src="images/asusrog.jpg" alt="ASUS ROG Strix SCAR 18 Gaming Laptop" class="product-img"
+                                loading="lazy">
+                        </a>
+                    </div>
+
+                    <div class="product-info">
+                        <span class="product-category">Computers</span>
+                        <h3>
+                            <a href="product.html?id=28" style="color: inherit; text-decoration: none;">
+                                ASUS ROG Strix SCAR 18
+                            </a>
+                        </h3>
+                        <div class="rating">
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <span>(41)</span>
+                        </div>
+                        <div class="product-bottom">
+                            <strong>GH₵ 22,800</strong>
+                            <button class="add-cart" data-name="ASUS ROG Strix SCAR 18" data-price="22800"
+                                data-image="images/asusrog.jpg">
+                                <i class="fa-solid fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                </article>
+
+            </div>
+
+        </section>
+
+
+        <!-- ==========================================
+             SERVICE FEATURES
+        =========================================== -->
+
+        <section class="service-section" id="services">
+
+            <div class="service-grid">
+
+                <div class="service-item">
+
+                    <i class="fa-solid fa-truck-fast"></i>
+
+                    <div>
+                        <strong>
+                            Fast Delivery
+                        </strong>
+
+                        <span>
+                            Quick delivery across Ghana
+                        </span>
+                    </div>
+
+                </div>
+
+
+                <div class="service-item">
+
+                    <i class="fa-solid fa-shield-halved"></i>
+
+                    <div>
+                        <strong>
+                            Secure Shopping
+                        </strong>
+
+                        <span>
+                            Your information stays protected
+                        </span>
+                    </div>
+
+                </div>
+
+
+                <div class="service-item">
+
+                    <i class="fa-solid fa-headset"></i>
+
+                    <div>
+                        <strong>
+                            Customer Support
+                        </strong>
+
+                        <span>
+                            We're here when you need us
+                        </span>
+                    </div>
+
+                </div>
+
+
+                <div class="service-item">
+
+                    <i class="fa-solid fa-rotate-left"></i>
+
+                    <div>
+                        <strong>
+                            Easy Returns
+                        </strong>
+
+                        <span>
+                            Shop with confidence
+                        </span>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- ==========================================
+         FOOTER
+    =========================================== -->
+
+    <footer class="footer" id="about">
+
+        <div class="footer-container">
+
+            <div class="footer-brand">
+
+                <a href="home.html" class="logo footer-logo-link">
+
+                    <img src="./images/logo.png" alt="Jarvis Computer Consult Logo"
+                        class="brand-logo-img footer-logo-img">
+
+                    <div class="logo-text modern-brand">
+                        <span class="brand-title">JARVIS</span>
+                        <span class="brand-subtitle">COMPUTER CONSULT</span>
+                    </div>
+
+                </a>
+
+                <p>
+                    Quality products, reliable service and
+                    a better way to shop online.
+                </p>
+
+            </div>
+
+
+            <div class="footer-column">
+
+                <h3>
+                    Shop
+                </h3>
+
+                <a href="#shop">
+                    Featured Products
+                </a>
+
+                <a href="#categories">
+                    Categories
+                </a>
+
+                <a href="#deals">
+                    Deals
+                </a>
+
+            </div>
+
+
+            <div class="footer-column">
+
+                <h3>
+                    Customer Service
+                </h3>
+
+                <a href="#">
+                    Contact Us
+                </a>
+
+                <a href="#">
+                    Delivery Information
+                </a>
+
+                <a href="#">
+                    Returns
+                </a>
+
+                <a href="#">
+                    Help Center
+                </a>
+
+            </div>
+
+
+            <div class="footer-column">
+
+                <h3>
+                    Follow Us
+                </h3>
+
+                <div class="social-links">
+
+                    <a href="#">
+                        <i class="fa-brands fa-facebook-f"></i>
+                    </a>
+
+                    <a href="#">
+                        <i class="fa-brands fa-instagram"></i>
+                    </a>
+
+                    <a href="#">
+                        <i class="fa-brands fa-x-twitter"></i>
+                    </a>
+
+                    <a href="#">
+                        <i class="fa-brands fa-whatsapp"></i>
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="footer-bottom">
+
+            <p>
+                © 2026 Jarvis Computer consult. All rights reserved.
+            </p>
+
+        </div>
+
+    </footer>
+
+
+    <!-- ==========================================
+         CART SIDEBAR
+    =========================================== -->
+
+    <div class="cart-overlay" id="cartOverlay"></div>
+
+    <aside class="cart-sidebar" id="cartSidebar">
+
+        <div class="cart-header">
+
+            <h2>
+                Your Cart
+            </h2>
+
+            <button id="closeCart">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+        </div>
+
+
+        <div class="cart-items" id="cartItems">
+
+            <div class="empty-cart">
+
+                <i class="fa-solid fa-cart-shopping"></i>
+
+                <h3>
+                    Your cart is empty
+                </h3>
+
+                <p>
+                    Add products to your cart to see them here.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="cart-footer">
+
+            <div class="cart-total">
+
+                <span>
+                    Total
+                </span>
+
+                <strong id="cartTotal">
+                    GH₵ 0.00
+                </strong>
+
+            </div>
+
+            <button class="checkout-button">
+                Proceed to Checkout
+            </button>
+
+        </div>
+
+    </aside>
+
+
+    <!-- Authentication & Logout Script -->
+    <script src="./auth-nav.js"></script>
+
+    <!-- Homepage JavaScript -->
+    <script src="./home.js"></script>
+
+</body>
+
+</html>

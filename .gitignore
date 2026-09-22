@@ -1,0 +1,26 @@
+# Dependencies
+node_modules/
+mobile-app/node_modules/
+package-lock.json
+
+# Expo / Mobile build artifacts
+.expo/
+mobile-app/.expo/
+mobile-app/dist/
+dist/
+web-build/
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+*.orig.*
+
+# Environment and scratch files
+.env
+.env*.local
+scratch/
+
+# OS metadata
+.DS_Store
+Thumbs.db
