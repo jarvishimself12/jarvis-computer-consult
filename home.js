@@ -53,12 +53,13 @@ addCartButtons.forEach(function (button) {
 
     button.addEventListener("click", function () {
 
+        const id = button.dataset.id ? Number(button.dataset.id) : undefined;
         const name = button.dataset.name;
         const price = Number(button.dataset.price);
         const image = button.dataset.image || "";
 
         const existingProduct = cart.find(
-            item => item.name === name
+            item => (id !== undefined && item.id === id) || item.name === name
         );
 
         if (existingProduct) {
@@ -67,10 +68,14 @@ addCartButtons.forEach(function (button) {
             if (!existingProduct.image && image) {
                 existingProduct.image = image;
             }
+            if (!existingProduct.id && id !== undefined) {
+                existingProduct.id = id;
+            }
 
         } else {
 
             cart.push({
+                id: id,
                 name: name,
                 price: price,
                 image: image,

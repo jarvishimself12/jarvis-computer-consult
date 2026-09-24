@@ -573,7 +573,7 @@ function loadProduct() {
     specCategory.textContent =
         product.categoryName;
 
-    loadRelatedProducts();
+    renderRelatedProducts();
 }
 
 
@@ -655,12 +655,18 @@ function addProductToCart(product, amount) {
 
     const existingProduct =
         cart.find(item =>
-            item.id === product.id
+            item.id === product.id || item.name === product.name
         );
 
     if (existingProduct) {
 
         existingProduct.quantity += amount;
+        if (!existingProduct.image && product.image) {
+            existingProduct.image = product.image;
+        }
+        if (!existingProduct.id) {
+            existingProduct.id = product.id;
+        }
 
     } else {
 
@@ -1037,152 +1043,7 @@ wishlistButton.addEventListener(
 );
 
 
-// ================================
-// RELATED PRODUCTS
-// ================================
 
-function loadRelatedProducts() {
-
-    const relatedProducts =
-        document.getElementById(
-            "relatedProducts"
-        );
-
-    const related =
-        products
-            .filter(item =>
-                item.category === product.category &&
-                item.id !== product.id
-            )
-            .slice(0, 4);
-
-
-    if (related.length === 0) {
-
-        relatedProducts.innerHTML = `
-            <p class="no-related">
-                No related products available.
-            </p>
-        `;
-
-        return;
-    }
-
-
-    relatedProducts.innerHTML =
-        related.map(item => `
-
-            <article
-                class="related-card"
-                data-id="${item.id}">
-
-                <div class="related-image">
-
-                    ${item.badge
-                ? `<span class="related-badge">
-                            ${item.badge}
-                           </span>`
-                : ""
-            }
-
-                    <i class="fa-solid ${item.icon}"></i>
-
-                </div>
-
-                <div class="related-info">
-
-                    <span class="related-category">
-                        ${item.categoryName}
-                    </span>
-
-                    <h3>
-                        ${item.name}
-                    </h3>
-
-                    <div class="related-rating">
-                        <span>★★★★★</span>
-                        <small>
-                            ${item.rating}
-                        </small>
-                    </div>
-
-                    <strong class="related-price">
-                        ${formatPrice(item.price)}
-                    </strong>
-
-                    <button
-                        class="related-cart"
-                        data-id="${item.id}">
-
-                        <i class="fa-solid fa-cart-plus"></i>
-                        Add to Cart
-
-                    </button>
-
-                </div>
-
-            </article>
-
-        `).join("");
-
-
-    document
-        .querySelectorAll(".related-card")
-        .forEach(card => {
-
-            card.addEventListener(
-                "click",
-                event => {
-
-                    if (
-                        event.target.closest(
-                            ".related-cart"
-                        )
-                    ) {
-                        return;
-                    }
-
-                    const id =
-                        card.dataset.id;
-
-                    window.location.href =
-                        `product.html?id=${id}`;
-                }
-            );
-        });
-
-
-    document
-        .querySelectorAll(".related-cart")
-        .forEach(button => {
-
-            button.addEventListener(
-                "click",
-                event => {
-
-                    event.stopPropagation();
-
-                    const id =
-                        Number(button.dataset.id);
-
-                    const selectedProduct =
-                        products.find(
-                            item =>
-                                item.id === id
-                        );
-
-                    addProductToCart(
-                        selectedProduct,
-                        1
-                    );
-
-                    alert(
-                        `${selectedProduct.name} has been added to your cart.`
-                    );
-                }
-            );
-        });
-}
 
 
 // ================================
@@ -1296,38 +1157,84 @@ if (productAccountButton) {
 
 function renderRelatedProducts() {
     const container = document.getElementById("relatedProducts");
-    if (!container) return;
+    if (!container || !product) return;
 
-    const related = products.filter(item => item.id !== productId).slice(0, 4);
+    // Filter products from the SAME category first (excluding the current product)
+    let related = products.filter(item => item.category === product.category && item.id !== productId);
+
+    // If fewer than 4 products in this category, fill with remaining products from other categories so the layout remains complete
+    if (related.length < 4) {
+        const additional = products.filter(item => item.id !== productId && !related.some(r => r.id === item.id));
+        related = related.concat(additional).slice(0, 4);
+    } else {
+        related = related.slice(0, 4);
+    }
+
+    if (related.length === 0) {
+        container.innerHTML = `<p class="no-related" style="grid-column: 1 / -1; text-align: center; color: #888; padding: 20px;">No related products available.</p>`;
+        return;
+    }
 
     container.innerHTML = related.map(item => `
-        <article class="product-card" style="background: white; border-radius: 14px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid #eee;">
-            <div class="product-image" style="height: 180px; position: relative; overflow: hidden; background: #f2f0fa;">
+        <article class="product-card" style="background: white; border-radius: 14px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid #eee; display: flex; flex-direction: column;">
+            <div class="product-image" style="height: 180px; position: relative; overflow: hidden; background: #f2f0fa; display: flex; align-items: center; justify-content: center;">
                 ${item.badge ? `<span class="product-badge" style="position: absolute; top: 10px; left: 10px; z-index: 2;">${item.badge}</span>` : ""}
-                <a href="product.html?id=${item.id}">
-                    <img src="${item.image}" alt="${item.name}" class="product-img" style="width: 100%; height: 100%; object-fit: cover; display: block;" loading="lazy">
+                <a href="product.html?id=${item.id}" style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;">
+                    ${item.image
+                        ? `<img src="${item.image}" alt="${item.name}" class="product-img" style="width: 100%; height: 100%; object-fit: cover; display: block;" loading="lazy">`
+                        : `<i class="fa-solid ${item.icon}" style="font-size: 50px; color: #aaa4c5;"></i>`
+                    }
                 </a>
             </div>
-            <div class="product-content" style="padding: 16px;">
-                <span class="product-category" style="font-size: 11px; color: #6c4df6; font-weight: 700; text-transform: uppercase;">
-                    ${item.categoryName}
-                </span>
-                <h3 style="font-size: 14px; margin: 6px 0 10px; font-weight: 700;">
-                    <a href="product.html?id=${item.id}" style="color: inherit; text-decoration: none;">
-                        ${item.name}
-                    </a>
-                </h3>
-                <div style="display: flex; align-items: center; justify-content: space-between;">
+            <div class="product-content" style="padding: 16px; display: flex; flex-direction: column; flex: 1; justify-content: space-between;">
+                <div>
+                    <span class="product-category" style="font-size: 11px; color: #6c4df6; font-weight: 700; text-transform: uppercase;">
+                        ${item.categoryName || item.category}
+                    </span>
+                    <h3 style="font-size: 14px; margin: 6px 0 10px; font-weight: 700; line-height: 1.4;">
+                        <a href="product.html?id=${item.id}" style="color: inherit; text-decoration: none;">
+                            ${item.name}
+                        </a>
+                    </h3>
+                </div>
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 10px;">
                     <strong style="font-size: 14px; color: #171717;">
                         ${formatPrice(item.price)}
                     </strong>
-                    <a href="product.html?id=${item.id}" style="display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 8px; background: #6c4df6; color: white; text-decoration: none;">
-                        <i class="fa-solid fa-arrow-right" style="font-size: 12px;"></i>
-                    </a>
+                    <div style="display: flex; gap: 8px;">
+                        <button class="quick-add-related" data-id="${item.id}" title="Add to Cart" style="display: flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 8px; background: #f3f0ff; color: #6c4df6; border: 1px solid #6c4df6; cursor: pointer; transition: 0.2s;">
+                            <i class="fa-solid fa-cart-plus" style="font-size: 13px;"></i>
+                        </button>
+                        <a href="product.html?id=${item.id}" title="View Details" style="display: flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 8px; background: #6c4df6; color: white; text-decoration: none;">
+                            <i class="fa-solid fa-arrow-right" style="font-size: 13px;"></i>
+                        </a>
+                    </div>
                 </div>
             </div>
         </article>
     `).join("");
+
+    container.querySelectorAll(".quick-add-related").forEach(button => {
+        button.addEventListener("click", (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+            const id = Number(button.dataset.id);
+            const selectedProduct = products.find(item => item.id === id);
+            if (selectedProduct) {
+                addProductToCart(selectedProduct, 1);
+                button.innerHTML = '<i class="fa-solid fa-check"></i>';
+                button.style.background = "#159957";
+                button.style.color = "#ffffff";
+                button.style.borderColor = "#159957";
+                setTimeout(() => {
+                    button.innerHTML = '<i class="fa-solid fa-cart-plus" style="font-size: 13px;"></i>';
+                    button.style.background = "#f3f0ff";
+                    button.style.color = "#6c4df6";
+                    button.style.borderColor = "#6c4df6";
+                }, 1000);
+            }
+        });
+    });
 }
 
 

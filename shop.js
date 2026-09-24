@@ -555,7 +555,15 @@ function getCategoryName(category) {
 
         office: "Home & Office",
 
-        services: "Design Services"
+        services: "Design Services",
+
+        gaming: "Gaming & Consoles",
+
+        networking: "Networking & CCTV",
+
+        storage: "Storage & Memory",
+
+        printers: "Printers & Scanners"
 
     };
 
@@ -765,13 +773,19 @@ function addToCart(productId) {
 
     const existingItem =
         cart.find(
-            item => item.id === productId
+            item => item.id === productId || item.name === product.name
         );
 
 
     if (existingItem) {
 
         existingItem.quantity += 1;
+        if (!existingItem.image && product.image) {
+            existingItem.image = product.image;
+        }
+        if (!existingItem.id) {
+            existingItem.id = product.id;
+        }
 
     } else {
 
