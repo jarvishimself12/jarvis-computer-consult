@@ -356,6 +356,162 @@ const products = [
         image: "images/iphone18.png",
         icon: "fa-mobile-screen-button",
         badge: "Pre-Order"
+    },
+
+    {
+        id: 30,
+        name: "Samsung Galaxy Z Fold 6",
+        category: "phones",
+        price: 18999,
+        rating: 4.9,
+        reviews: 52,
+        image: "images/zfold6.jpg",
+        icon: "fa-mobile-screen-button",
+        badge: "Foldable AI"
+    },
+
+    {
+        id: 31,
+        name: "Samsung Galaxy Z Flip 6",
+        category: "phones",
+        price: 12999,
+        rating: 4.8,
+        reviews: 41,
+        image: "images/zflip6.jpg",
+        icon: "fa-mobile-screen-button",
+        badge: "Compact AI"
+    },
+
+    {
+        id: 32,
+        name: "Google Pixel 9 Pro Fold",
+        category: "phones",
+        price: 19500,
+        rating: 4.9,
+        reviews: 36,
+        image: "images/pixel9fold.jpg",
+        icon: "fa-mobile-screen-button",
+        badge: "Gemini Pro"
+    },
+
+    {
+        id: 33,
+        name: "OnePlus 12",
+        category: "phones",
+        price: 9999,
+        rating: 4.8,
+        reviews: 45,
+        image: "images/oneplus12.jpg",
+        icon: "fa-mobile-screen-button",
+        badge: "Flagship"
+    },
+
+    {
+        id: 34,
+        name: "Xiaomi 14 Ultra",
+        category: "phones",
+        price: 13999,
+        rating: 4.9,
+        reviews: 38,
+        image: "images/xiaomi14ultra.jpg",
+        icon: "fa-mobile-screen-button",
+        badge: "Leica Optics"
+    },
+
+    {
+        id: 35,
+        name: "Apple MacBook Air 15\" M3",
+        category: "computers",
+        price: 15499,
+        rating: 4.9,
+        reviews: 44,
+        image: "images/macbookair.jpg",
+        icon: "fa-laptop",
+        badge: "M3 Silicon"
+    },
+
+    {
+        id: 36,
+        name: "Lenovo ThinkPad X1 Carbon Gen 12",
+        category: "computers",
+        price: 17800,
+        rating: 4.8,
+        reviews: 29,
+        image: "images/thinkpad.jpg",
+        icon: "fa-laptop",
+        badge: "Business Pro"
+    },
+
+    {
+        id: 37,
+        name: "HP Spectre x360 16 2-in-1",
+        category: "computers",
+        price: 16500,
+        rating: 4.7,
+        reviews: 31,
+        image: "images/hpspectre.jpg",
+        icon: "fa-laptop",
+        badge: "2-in-1 OLED"
+    },
+
+    {
+        id: 38,
+        name: "Razer Blade 16 Gaming Laptop",
+        category: "computers",
+        price: 26500,
+        rating: 4.9,
+        reviews: 35,
+        image: "images/razerblade.jpg",
+        icon: "fa-laptop",
+        badge: "RTX 4090"
+    },
+
+    {
+        id: 39,
+        name: "Microsoft Surface Laptop 7 Copilot+ PC",
+        category: "computers",
+        price: 14200,
+        rating: 4.8,
+        reviews: 27,
+        image: "images/surfacelaptop.jpg",
+        icon: "fa-laptop",
+        badge: "Copilot+ AI"
+    },
+
+    {
+        id: 40,
+        name: "Sony WH-1000XM5 Wireless Headphones",
+        category: "accessories",
+        price: 3899,
+        rating: 4.9,
+        reviews: 68,
+        image: "images/sonyheadphones.jpg",
+        icon: "fa-headphones",
+        badge: "Noise Canceling"
+    },
+
+    {
+        id: 41,
+        name: "Nintendo Switch OLED Model",
+        category: "gaming",
+        price: 4200,
+        rating: 4.8,
+        reviews: 59,
+        image: "images/nintendoswitch.jpg",
+        icon: "fa-gamepad",
+        badge: "OLED Gaming"
+    },
+
+    {
+        id: 42,
+        name: "Apple Watch Ultra 2",
+        category: "accessories",
+        price: 8999,
+        rating: 4.9,
+        reviews: 42,
+        image: "images/applewatchultra.jpg",
+        icon: "fa-clock",
+        badge: "Titanium GPS"
     }
 
 ];

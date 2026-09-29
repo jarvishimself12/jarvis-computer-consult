@@ -467,6 +467,214 @@ const products = [
             "Apple's next-generation flagship with Apple A19 Pro Bionic, holographic Super Retina XDR, and 200MP crystal optics.",
         longDescription:
             "The iPhone 18 Pro Max represents the pinnacle of mobile engineering. Built with aerospace-grade Grade 5 titanium, an edge-to-edge holographic 6.9-inch Super Retina XDR OLED with 120Hz ProMotion, 200MP Quad-Fusion periscope camera system with sapphire crystal optics, on-device Apple Intelligence powered by the 3nm A19 Pro Neural Bionic processor, and an extraordinary 38-hour battery life."
+    },
+    {
+        id: 30,
+        name: "Samsung Galaxy Z Fold 6",
+        category: "phones",
+        categoryName: "Phones & Tablets",
+        price: 18999,
+        rating: 4.9,
+        reviews: 52,
+        image: "images/zfold6.jpg",
+        icon: "fa-mobile-screen-button",
+        badge: "Foldable AI",
+        description:
+            "Next-gen foldable smartphone with Galaxy AI, dual Dynamic AMOLED 2X displays, Snapdragon 8 Gen 3 for Galaxy, and enhanced S Pen support.",
+        longDescription:
+            "Samsung Galaxy Z Fold 6 redefines mobile productivity and multitasking. Featuring an ultra-slim Armor Aluminum frame with IP48 water resistance, a vibrant 7.6-inch Dynamic AMOLED 2X foldable main screen, 6.3-inch cover screen, integrated Galaxy AI with Live Translate, Note Assist, Circle to Search, and pro-grade 50MP triple cameras."
+    },
+    {
+        id: 31,
+        name: "Samsung Galaxy Z Flip 6",
+        category: "phones",
+        categoryName: "Phones & Tablets",
+        price: 12999,
+        rating: 4.8,
+        reviews: 41,
+        image: "images/zflip6.jpg",
+        icon: "fa-mobile-screen-button",
+        badge: "Compact AI",
+        description:
+            "Compact clamshell folding phone with 3.4-inch FlexWindow, 50MP AI-enhanced camera, vapor chamber cooling, and all-day battery life.",
+        longDescription:
+            "The Galaxy Z Flip 6 combines iconic pocketable design with peak performance. Enjoy hands-free photography with FlexCam, interactive widgets on the customized FlexWindow, Snapdragon 8 Gen 3 for Galaxy processor, enhanced 4,000mAh battery with vapor chamber cooling, and comprehensive Galaxy AI creative tools."
+    },
+    {
+        id: 32,
+        name: "Google Pixel 9 Pro Fold",
+        category: "phones",
+        categoryName: "Phones & Tablets",
+        price: 19500,
+        rating: 4.9,
+        reviews: 36,
+        image: "images/pixel9fold.jpg",
+        icon: "fa-mobile-screen-button",
+        badge: "Gemini Pro",
+        description:
+            "Google's thinnest foldable with an 8.0-inch Super Actua Flex screen, Tensor G4 processor, built-in Gemini Live, and advanced triple rear cameras.",
+        longDescription:
+            "Google Pixel 9 Pro Fold pairs an expansive 8.0-inch inner OLED display with Google's most sophisticated on-device AI. Powered by Google Tensor G4 with 16GB RAM, fluid multi-tasking Split Screen, Magic Editor, Add Me photo tech, satellite SOS, and 7 years of Pixel Feature Drops and OS upgrades."
+    },
+    {
+        id: 33,
+        name: "OnePlus 12",
+        category: "phones",
+        categoryName: "Phones & Tablets",
+        price: 9999,
+        rating: 4.8,
+        reviews: 45,
+        image: "images/oneplus12.jpg",
+        icon: "fa-mobile-screen-button",
+        badge: "Flagship",
+        description:
+            "Speed flagship featuring Snapdragon 8 Gen 3, 4th Gen Hasselblad camera system, 5400mAh battery, and 100W SUPERVOOC ultra-fast charging.",
+        longDescription:
+            "The OnePlus 12 delivers exceptional flagship value with Snapdragon 8 Gen 3 computing, up to 16GB LPDDR5X RAM, 2K 120Hz ProXDR display with Aqua Touch technology, 50MP Sony LYT-808 primary sensor with Hasselblad color tuning, 64MP 3x periscope telephoto, and 100W wired / 50W wireless charging."
+    },
+    {
+        id: 34,
+        name: "Xiaomi 14 Ultra",
+        category: "phones",
+        categoryName: "Phones & Tablets",
+        price: 13999,
+        rating: 4.9,
+        reviews: 38,
+        image: "images/xiaomi14ultra.jpg",
+        icon: "fa-mobile-screen-button",
+        badge: "Leica Optics",
+        description:
+            "Photography masterwork featuring quad Leica 50MP cameras with 1-inch LYT-900 sensor, stepless variable aperture, and Snapdragon 8 Gen 3.",
+        longDescription:
+            "Engineered in partnership with Leica, Xiaomi 14 Ultra is the pinnacle of mobile optical excellence. Outfitted with four 50MP focal-length covering lenses, 1-inch stepless variable aperture (f/1.63 - f/4.0), 8K video capture on all cameras, Xiaomi Shield Glass, WQHD+ LTPO AMOLED screen, and HyperOS."
+    },
+    {
+        id: 35,
+        name: "Apple MacBook Air 15\" M3",
+        category: "computers",
+        categoryName: "Computers & Laptops",
+        price: 15499,
+        rating: 4.9,
+        reviews: 44,
+        image: "images/macbookair.jpg",
+        icon: "fa-laptop",
+        badge: "M3 Silicon",
+        description:
+            "Ultra-thin 15.3-inch Liquid Retina display laptop powered by Apple M3 chip with up to 18 hours of battery life and MagSafe 3 charging.",
+        longDescription:
+            "The 15-inch MacBook Air gives you more room for what you love with a spacious Liquid Retina display. Powered by the incredibly capable M3 chip, it breezes through heavy workloads, dual external display setups, and creative editing in a fanless, whisper-quiet aluminum unibody."
+    },
+    {
+        id: 36,
+        name: "Lenovo ThinkPad X1 Carbon Gen 12",
+        category: "computers",
+        categoryName: "Computers & Laptops",
+        price: 17800,
+        rating: 4.8,
+        reviews: 29,
+        image: "images/thinkpad.jpg",
+        icon: "fa-laptop",
+        badge: "Business Pro",
+        description:
+            "Ultralight carbon-fiber business laptop with Intel Core Ultra 7 vPro, 2.8K OLED display, legendary TrackPoint keyboard, and enterprise security.",
+        longDescription:
+            "The gold standard of executive and developer computing. Built with aerospace-grade carbon fiber and recycled magnesium, featuring Intel Core Ultra 7 with integrated AI NPU, 32GB RAM, 1TB PCIe 4.0 SSD, Communications Bar with 8MP MIPI camera, military-spec MIL-STD-810H durability, and all-day battery life."
+    },
+    {
+        id: 37,
+        name: "HP Spectre x360 16 2-in-1",
+        category: "computers",
+        categoryName: "Computers & Laptops",
+        price: 16500,
+        rating: 4.7,
+        reviews: 31,
+        image: "images/hpspectre.jpg",
+        icon: "fa-laptop",
+        badge: "2-in-1 OLED",
+        description:
+            "Versatile 2-in-1 convertible laptop featuring 16-inch 2.8K 120Hz OLED touchscreen, Intel Core Ultra 7, NVIDIA RTX 4050, and tilt pen support.",
+        longDescription:
+            "HP Spectre x360 16 seamlessly transitions between laptop, tent, stand, and tablet modes. Features a gem-cut aluminum chassis, radiant 2.8K OLED IMAX Enhanced touch display, AI-tuned 9MP webcam with presence detection, Quad Speakers tuned by Poly Studio, and included rechargeable HP MPP 2.0 Tilt Pen."
+    },
+    {
+        id: 38,
+        name: "Razer Blade 16 Gaming Laptop",
+        category: "computers",
+        categoryName: "Computers & Laptops",
+        price: 26500,
+        rating: 4.9,
+        reviews: 35,
+        image: "images/razerblade.jpg",
+        icon: "fa-laptop",
+        badge: "RTX 4090",
+        description:
+            "Elite gaming machine with Intel Core i9-14900HX, NVIDIA GeForce RTX 4090 GPU, world's first dual-mode Mini-LED display, and CNC anodized chassis.",
+        longDescription:
+            "Designed for hardcore gamers and elite creators, the Razer Blade 16 packs desktop-tier power into a sleek 0.86-inch anodized aluminum body. Features NVIDIA GeForce RTX 4090 (175W TGP), dual-mode display switching between UHD+ 120Hz and FHD+ 240Hz, patented vapor chamber cooling, and per-key Razer Chroma RGB."
+    },
+    {
+        id: 39,
+        name: "Microsoft Surface Laptop 7 Copilot+ PC",
+        category: "computers",
+        categoryName: "Computers & Laptops",
+        price: 14200,
+        rating: 4.8,
+        reviews: 27,
+        image: "images/surfacelaptop.jpg",
+        icon: "fa-laptop",
+        badge: "Copilot+ AI",
+        description:
+            "Next-gen Copilot+ PC with Snapdragon X Elite processor, 45 TOPS NPU, vibrant PixelSense Flow touchscreen, and 20-hour battery life.",
+        longDescription:
+            "Unmatched speed, intelligence, and battery longevity in an ultra-sleek anodized aluminum frame. Driven by the Snapdragon X Elite chip with a 45 TOPS NPU for instant AI experiences like Recall, Live Captions, and Cocreator, paired with a 13.8-inch 120Hz HDR touchscreen and haptic precision touchpad."
+    },
+    {
+        id: 40,
+        name: "Sony WH-1000XM5 Wireless Headphones",
+        category: "accessories",
+        categoryName: "Accessories",
+        price: 3899,
+        rating: 4.9,
+        reviews: 68,
+        image: "images/sonyheadphones.jpg",
+        icon: "fa-headphones",
+        badge: "Noise Canceling",
+        description:
+            "Industry-leading noise canceling headphones with dual processors, 8 microphones, LDAC Hi-Res Audio, and 30-hour battery life with quick charging.",
+        longDescription:
+            "Experience pure audio immersion with the Sony WH-1000XM5. Featuring Auto NC Optimizer that automatically adjusts noise cancellation based on wearing conditions and environment, precision-engineered 30mm carbon fiber drivers, crystal-clear hands-free calling with beamforming microphones, and ultra-comfortable soft fit leather."
+    },
+    {
+        id: 41,
+        name: "Nintendo Switch OLED Model",
+        category: "gaming",
+        categoryName: "Gaming & Consoles",
+        price: 4200,
+        rating: 4.8,
+        reviews: 59,
+        image: "images/nintendoswitch.jpg",
+        icon: "fa-gamepad",
+        badge: "OLED Gaming",
+        description:
+            "Hybrid gaming console with vibrant 7-inch OLED screen, wide adjustable stand, wired LAN dock, 64GB storage, and enhanced audio.",
+        longDescription:
+            "Play anytime, anywhere with the Nintendo Switch OLED model. Featuring a vivid 7-inch OLED screen with deep blacks and rich colors, wide adjustable tabletop stand, dock with wired LAN port, 64GB internal storage, enhanced audio in handheld and tabletop modes, and Joy-Con controllers with HD rumble."
+    },
+    {
+        id: 42,
+        name: "Apple Watch Ultra 2",
+        category: "accessories",
+        categoryName: "Accessories",
+        price: 8999,
+        rating: 4.9,
+        reviews: 42,
+        image: "images/applewatchultra.jpg",
+        icon: "fa-clock",
+        badge: "Titanium GPS",
+        description:
+            "Rugged 49mm aerospace titanium smartwatch with S9 SiP, 3000 nits display, precision dual-frequency GPS, and up to 72 hours battery life.",
+        longDescription:
+            "The most rugged and capable Apple Watch ever. Crafted with corrosion-resistant aerospace titanium, sapphire front crystal, 3000 nits Retina display, double tap gesture control, depth gauge with water resistance to 100m, Action button customization, emergency siren, and cellular connectivity."
     }
 ];
 
