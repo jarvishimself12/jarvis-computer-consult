@@ -1610,3 +1610,6 @@ if (initialSearch && searchInput) {
 displayProducts();
 
 updateCart();
+
+// Expose products database globally for admin portal and checkout
+window.products = products;

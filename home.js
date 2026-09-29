@@ -460,6 +460,22 @@ if (categoriesButton) {
 
 
 // ==========================================
+// CHECKOUT
+// ==========================================
+
+const homeCheckoutButton = document.getElementById("checkoutButton");
+if (homeCheckoutButton) {
+    homeCheckoutButton.addEventListener("click", function () {
+        if (!cart || cart.length === 0) {
+            alert("Your cart is empty. Please add products before checking out.");
+            return;
+        }
+        window.location.href = "checkout.html";
+    });
+}
+
+
+// ==========================================
 // INITIALIZE
 // ==========================================
 
