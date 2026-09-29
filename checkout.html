@@ -217,7 +217,10 @@
                                 <span>Mobile Money</span>
                             </button>
                             <button type="button" class="payment-tab-btn" data-mode="card">
-                                <i class="fa-solid fa-credit-card"></i>
+                                <div class="tab-card-logos">
+                                    <img src="images/visa.svg" alt="Visa">
+                                    <img src="images/mastercard.svg" alt="Mastercard">
+                                </div>
                                 <span>Card (Visa/MC)</span>
                             </button>
                             <button type="button" class="payment-tab-btn" data-mode="bank">
@@ -232,22 +235,19 @@
 
                         <!-- PANE 1: MOBILE MONEY (MOMO) -->
                         <div id="pane-momo" class="payment-pane active">
-                            <label style="font-size: 13px; font-weight: 700; display: block; margin-bottom: 8px;">Select Mobile Money Network:</label>
+                            <label style="font-size: 13px; font-weight: 700; display: block; margin-bottom: 10px;">Select Mobile Money Network:</label>
                             <div class="momo-network-selector">
                                 <div class="network-badge mtn selected" data-network="MTN MoMo">
-                                    <i class="fa-solid fa-bolt" style="color: #f59e0b; font-size: 20px;"></i>
-                                    <span class="network-name">MTN MoMo</span>
-                                    <span class="network-sub">*170# Instant</span>
+                                    <img src="images/mtn_momo.svg" alt="MTN MoMo Logo" class="network-logo-img">
+                                    <span class="network-sub">*170# Instant MoMo</span>
                                 </div>
                                 <div class="network-badge telecel" data-network="Telecel Cash">
-                                    <i class="fa-solid fa-signal" style="color: #dc2626; font-size: 20px;"></i>
-                                    <span class="network-name">Telecel Cash</span>
-                                    <span class="network-sub">*110# Vodafone</span>
+                                    <img src="images/telecel_cash.svg" alt="Telecel Cash Logo" class="network-logo-img">
+                                    <span class="network-sub">*110# Telecel Cash</span>
                                 </div>
                                 <div class="network-badge at" data-network="AT Money">
-                                    <i class="fa-solid fa-globe" style="color: #2563eb; font-size: 20px;"></i>
-                                    <span class="network-name">AT Money</span>
-                                    <span class="network-sub">*110# AirtelTigo</span>
+                                    <img src="images/at_money.svg" alt="AT Money Logo" class="network-logo-img">
+                                    <span class="network-sub">*110# AT Money</span>
                                 </div>
                             </div>
 
@@ -273,15 +273,30 @@
 
                         <!-- PANE 2: CARD (VISA/MASTERCARD) -->
                         <div id="pane-card" class="payment-pane">
+                            <!-- ACCEPTED CARDS HEADER -->
+                            <div class="accepted-cards-header">
+                                <div>
+                                    <span class="accepted-cards-label">Accepted Debit & Credit Cards:</span>
+                                    <p class="accepted-cards-sub">Local & International Cards Issued in Ghana</p>
+                                </div>
+                                <div class="card-brands-row">
+                                    <img src="images/visa.svg" alt="Visa" class="card-brand-logo" title="Visa Card Supported">
+                                    <img src="images/mastercard.svg" alt="Mastercard" class="card-brand-logo" title="Mastercard Supported">
+                                </div>
+                            </div>
+
                             <div class="form-group">
                                 <label for="cardHolder">Cardholder Name <span class="required">*</span></label>
                                 <input type="text" id="cardHolder" class="form-input" placeholder="Name on card">
                             </div>
                             <div class="form-group">
                                 <label for="cardNumber">Card Number <span class="required">*</span></label>
-                                <div style="position: relative;">
+                                <div class="card-input-container">
                                     <input type="text" id="cardNumber" class="form-input" placeholder="4123 •••• •••• 9876" maxlength="19">
-                                    <i class="fa-brands fa-cc-visa" style="position: absolute; right: 14px; top: 14px; font-size: 20px; color: #1a1f71;"></i>
+                                    <div class="input-card-icons">
+                                        <img src="images/visa.svg" alt="Visa" class="input-card-icon">
+                                        <img src="images/mastercard.svg" alt="Mastercard" class="input-card-icon">
+                                    </div>
                                 </div>
                             </div>
                             <div class="form-row">

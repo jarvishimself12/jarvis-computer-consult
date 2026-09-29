@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 55" width="160" height="55">
+  <defs>
+    <linearGradient id="telecelRed" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#E30613" />
+      <stop offset="100%" stop-color="#B8000B" />
+    </linearGradient>
+  </defs>
+  <!-- Background Badge -->
+  <rect width="160" height="55" rx="12" fill="url(#telecelRed)" />
+  
+  <!-- Telecel Circular Emblem with 't' -->
+  <circle cx="32" cy="27.5" r="16" fill="#FFFFFF" />
+  <path d="M 28 17 L 33 17 L 33 22 L 38 22 L 38 26 L 33 26 L 33 34 C 33 36 34 37 36 37 C 37 37 38 36.5 38.5 36 L 39 39.5 C 38 40.5 36.5 41 34.5 41 C 31 41 29 39 29 34 L 29 26 L 26 26 L 26 22 L 29 22 L 29 17 Z" fill="#E30613" />
+  
+  <!-- Text telecel cash -->
+  <text x="56" y="27" font-family="'Helvetica Neue', Arial, sans-serif" font-weight="900" font-size="16" fill="#FFFFFF" letter-spacing="-0.5">telecel</text>
+  <rect x="56" y="32" width="52" height="15" rx="4" fill="#FFFFFF" />
+  <text x="82" y="43" font-family="'Helvetica Neue', Arial, sans-serif" font-weight="900" font-size="10.5" fill="#E30613" text-anchor="middle" letter-spacing="1.5">CASH</text>
+</svg>

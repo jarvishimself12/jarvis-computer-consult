@@ -234,8 +234,11 @@
             });
         });
 
-        // Card number formatting
+        // Card number formatting & automatic brand detection
         const cardNumInput = document.getElementById("cardNumber");
+        const visaIcons = document.querySelectorAll('img[src*="visa"]');
+        const mcIcons = document.querySelectorAll('img[src*="mastercard"]');
+
         if (cardNumInput) {
             cardNumInput.addEventListener("input", function (e) {
                 let val = e.target.value.replace(/\D/g, "");
@@ -246,6 +249,18 @@
                     formatted += val[i];
                 }
                 e.target.value = formatted;
+
+                // Visual brand detection based on card prefix
+                if (val.startsWith("4")) {
+                    visaIcons.forEach(img => img.style.opacity = "1");
+                    mcIcons.forEach(img => img.style.opacity = "0.35");
+                } else if (val.startsWith("5") || val.startsWith("2")) {
+                    mcIcons.forEach(img => img.style.opacity = "1");
+                    visaIcons.forEach(img => img.style.opacity = "0.35");
+                } else {
+                    visaIcons.forEach(img => img.style.opacity = "1");
+                    mcIcons.forEach(img => img.style.opacity = "1");
+                }
             });
         }
 

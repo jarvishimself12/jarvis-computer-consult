@@ -443,17 +443,31 @@ body {
 }
 
 /* MOMO SPECIFIC */
+.tab-card-logos {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+    justify-content: center;
+    height: 22px;
+}
+
+.tab-card-logos img {
+    height: 16px;
+    width: auto;
+    object-fit: contain;
+}
+
 .momo-network-selector {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 12px;
-    margin-bottom: 18px;
+    gap: 14px;
+    margin-bottom: 20px;
 }
 
 .network-badge {
     border: 2px solid var(--border);
     border-radius: var(--radius-sm);
-    padding: 12px;
+    padding: 14px 10px;
     text-align: center;
     cursor: pointer;
     transition: var(--transition);
@@ -461,7 +475,22 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 6px;
+    justify-content: center;
+    gap: 8px;
+}
+
+.network-logo-img {
+    height: 38px;
+    width: auto;
+    max-width: 100%;
+    object-fit: contain;
+    border-radius: 6px;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.08));
+    transition: var(--transition);
+}
+
+.network-badge:hover .network-logo-img {
+    transform: scale(1.04);
 }
 
 .network-badge.mtn {
@@ -469,42 +498,101 @@ body {
 }
 
 .network-badge.mtn.selected {
-    background: #fffbe6;
+    background: #fffdf0;
     border-color: #f59e0b;
-    box-shadow: 0 0 0 2px #f59e0b;
+    box-shadow: 0 0 0 2px #f59e0b, var(--shadow-sm);
 }
 
 .network-badge.telecel {
-    border-color: #f87171;
+    border-color: #fca5a5;
 }
 
 .network-badge.telecel.selected {
-    background: #fef2f2;
+    background: #fff5f5;
     border-color: #dc2626;
-    box-shadow: 0 0 0 2px #dc2626;
+    box-shadow: 0 0 0 2px #dc2626, var(--shadow-sm);
 }
 
 .network-badge.at {
-    border-color: #60a5fa;
+    border-color: #93c5fd;
 }
 
 .network-badge.at.selected {
-    background: #eff6ff;
+    background: #f0f7ff;
     border-color: #2563eb;
-    box-shadow: 0 0 0 2px #2563eb;
-}
-
-.network-name {
-    font-size: 13px;
-    font-weight: 700;
-    color: var(--dark);
+    box-shadow: 0 0 0 2px #2563eb, var(--shadow-sm);
 }
 
 .network-sub {
-    font-size: 10px;
+    font-size: 11px;
     color: var(--muted);
-    font-weight: 600;
+    font-weight: 700;
     text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* ACCEPTED CARDS HEADER */
+.accepted-cards-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #f8fafc;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 12px 16px;
+    margin-bottom: 18px;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.accepted-cards-label {
+    font-size: 13.5px;
+    font-weight: 700;
+    color: var(--dark);
+    display: block;
+}
+
+.accepted-cards-sub {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 1px;
+}
+
+.card-brands-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.card-brand-logo {
+    height: 28px;
+    width: auto;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.card-input-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.card-input-container .form-input {
+    padding-right: 90px;
+}
+
+.input-card-icons {
+    position: absolute;
+    right: 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    pointer-events: none;
+}
+
+.input-card-icon {
+    height: 20px;
+    width: auto;
 }
 
 .momo-instruction-box {
