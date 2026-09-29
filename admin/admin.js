@@ -137,7 +137,7 @@
         } else {
             if (authErrorMsg) {
                 authErrorMsg.style.display = "block";
-                authErrorMsg.textContent = "Invalid credentials. Use admin / jarvis2026";
+                authErrorMsg.textContent = "Invalid Administrator ID or password. Access denied.";
             }
         }
     }
