@@ -1,12 +1,16 @@
-/* =========================================
+/* ==============================================================
    JARVIS COMPUTER CONSULT
-   ADMIN DASHBOARD & ORDER MANAGEMENT LOGIC
-========================================= */
+   STANDALONE ADMIN PORTAL LOGIC & ORDER SYNCHRONIZATION
+============================================================== */
 
 (function () {
     "use strict";
 
-    // Orders state
+    // Admin Credentials
+    const ADMIN_USER = "admin";
+    const ADMIN_PASS = "jarvis2026"; // Also supports "admin123"
+
+    // State
     let orders = [];
     let currentFilterStatus = "all";
     let currentFilterPayment = "all";
@@ -14,7 +18,15 @@
     let selectedOrderForModal = null;
     let lastKnownOrdersCount = 0;
 
-    // DOM Elements
+    // DOM Elements - Auth Lock
+    const authLockOverlay = document.getElementById("authLockOverlay");
+    const adminUsernameInput = document.getElementById("adminUsername");
+    const adminPasswordInput = document.getElementById("adminPassword");
+    const btnUnlockAdmin = document.getElementById("btnUnlockAdmin");
+    const authErrorMsg = document.getElementById("authErrorMsg");
+    const btnLockPortal = document.getElementById("btnLockPortal");
+
+    // DOM Elements - Dashboard
     const kpiRevenue = document.getElementById("kpiRevenue");
     const kpiTotalOrders = document.getElementById("kpiTotalOrders");
     const kpiProcessing = document.getElementById("kpiProcessing");
@@ -32,7 +44,7 @@
     const createDemoOrderBtn = document.getElementById("createDemoOrderBtn");
     const btnPlaceSampleOrder = document.getElementById("btnPlaceSampleOrder");
 
-    // Modal Elements
+    // DOM Elements - Modal
     const adminOrderModal = document.getElementById("adminOrderModal");
     const closeOrderModalBtn = document.getElementById("closeOrderModalBtn");
     const modalOrderDate = document.getElementById("modalOrderDate");
@@ -56,12 +68,12 @@
     const modalWhatsAppBtn = document.getElementById("modalWhatsAppBtn");
     const modalPrintBtn = document.getElementById("modalPrintBtn");
 
-    // Toast Alert
-    const orderToast = document.getElementById("orderToast");
+    // Toast
+    const realtimeToast = document.getElementById("realtimeToast");
     const toastTitle = document.getElementById("toastTitle");
     const toastDesc = document.getElementById("toastDesc");
 
-    // Format Money in GH₵
+    // Format Money (GH₵)
     function formatMoney(amount) {
         return `GH₵ ${Number(amount).toLocaleString("en-GH", {
             minimumFractionDigits: 2,
@@ -69,7 +81,7 @@
         })}`;
     }
 
-    // Play subtle audio chime for new orders
+    // Audio chime for new orders
     function playOrderChime() {
         try {
             const ctx = new (window.AudioContext || window.webkitAudioContext)();
@@ -78,142 +90,66 @@
             osc.connect(gain);
             gain.connect(ctx.destination);
             osc.type = "sine";
-            osc.frequency.setValueAtTime(587.33, ctx.currentTime); // D5
-            osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.15); // A5
+            osc.frequency.setValueAtTime(587.33, ctx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.15);
             gain.gain.setValueAtTime(0.2, ctx.currentTime);
             gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.35);
             osc.start();
             osc.stop(ctx.currentTime + 0.35);
-        } catch (e) {
-            // AudioContext not allowed without gesture, safe to ignore
-        }
+        } catch (e) {}
     }
 
-    // Show floating toast alert
     function showToast(title, desc) {
-        if (!orderToast) return;
+        if (!realtimeToast) return;
         if (toastTitle) toastTitle.textContent = title;
         if (toastDesc) toastDesc.textContent = desc;
-        orderToast.classList.add("visible");
+        realtimeToast.classList.add("active");
         playOrderChime();
         setTimeout(() => {
-            orderToast.classList.remove("visible");
+            realtimeToast.classList.remove("active");
         }, 5000);
     }
 
-    // Sample initial orders if localStorage is empty
-    const SAMPLE_ORDERS = [
-        {
-            id: "JCC-92410",
-            createdAt: new Date(Date.now() - 3600000 * 2).toISOString(),
-            dateFormatted: "Today, 10:15 AM",
-            customer: {
-                name: "Nana Kwame Boateng",
-                phone: "+233 24 492 8110",
-                email: "boateng.kwame@gmail.com",
-                region: "Greater Accra",
-                city: "East Legon, Accra",
-                gpsAddress: "GA-182-9014",
-                notes: "Please call when you reach the Shell filling station."
-            },
-            items: [
-                {
-                    id: 30,
-                    name: "Samsung Galaxy Z Fold 6",
-                    price: 18999,
-                    quantity: 1,
-                    image: "images/zfold6.jpg"
-                },
-                {
-                    id: 42,
-                    name: "Apple Watch Ultra 2",
-                    price: 8999,
-                    quantity: 1,
-                    image: "images/applewatchultra.jpg"
-                }
-            ],
-            deliverySpeed: "express",
-            deliveryCost: 60,
-            subtotal: 27998,
-            discount: 0,
-            total: 28058,
-            paymentMethod: "Mobile Money (MTN MoMo - 0244928110)",
-            paymentStatus: "Paid",
-            orderStatus: "Processing"
-        },
-        {
-            id: "JCC-88125",
-            createdAt: new Date(Date.now() - 3600000 * 8).toISOString(),
-            dateFormatted: "Today, 4:20 AM",
-            customer: {
-                name: "Akosua Adobea Mensah",
-                phone: "+233 20 812 3456",
-                email: "adobea.mensah@techhub.gh",
-                region: "Ashanti",
-                city: "Kumasi, Ahodwo",
-                gpsAddress: "AK-045-8891",
-                notes: "Office delivery at reception."
-            },
-            items: [
-                {
-                    id: 35,
-                    name: "Apple MacBook Air 15\" M3",
-                    price: 15499,
-                    quantity: 1,
-                    image: "images/macbookair.jpg"
-                },
-                {
-                    id: 40,
-                    name: "Sony WH-1000XM5 Wireless Headphones",
-                    price: 3899,
-                    quantity: 1,
-                    image: "images/sonyheadphones.jpg"
-                }
-            ],
-            deliverySpeed: "standard",
-            deliveryCost: 35,
-            subtotal: 19398,
-            discount: 1939.8,
-            couponCode: "JARVIS10",
-            total: 17493.2,
-            paymentMethod: "Visa Card (ending in •••• 4192)",
-            paymentStatus: "Paid",
-            orderStatus: "Shipped"
-        },
-        {
-            id: "JCC-74192",
-            createdAt: new Date(Date.now() - 3600000 * 24).toISOString(),
-            dateFormatted: "Yesterday, 2:45 PM",
-            customer: {
-                name: "Dr. Emmanuel Osei-Tutu",
-                phone: "+233 55 901 2234",
-                email: "dr.oseitutu@ug.edu.gh",
-                region: "Greater Accra",
-                city: "Legon Campus, Accra",
-                gpsAddress: "GA-002-1400",
-                notes: "Deliver to Faculty Office."
-            },
-            items: [
-                {
-                    id: 1,
-                    name: "Premium Laptop Pro",
-                    price: 5499,
-                    quantity: 2,
-                    image: "images/laptop.jpg"
-                }
-            ],
-            deliverySpeed: "standard",
-            deliveryCost: 35,
-            subtotal: 10998,
-            discount: 0,
-            total: 11033,
-            paymentMethod: "Cash on Delivery",
-            paymentStatus: "Paid",
-            orderStatus: "Delivered"
+    // ==============================================================
+    // AUTHENTICATION CHECK
+    // ==============================================================
+    function checkAuth() {
+        const isAuth = sessionStorage.getItem("adminAuth") === "true";
+        if (isAuth) {
+            if (authLockOverlay) authLockOverlay.style.display = "none";
+            loadOrders(true);
+        } else {
+            if (authLockOverlay) authLockOverlay.style.display = "flex";
+            if (adminUsernameInput) adminUsernameInput.focus();
         }
-    ];
+    }
 
-    // Load orders from LocalStorage
+    function attemptLogin() {
+        const u = (adminUsernameInput.value || "").trim();
+        const p = (adminPasswordInput.value || "").trim();
+
+        if ((u.toLowerCase() === ADMIN_USER) && (p === ADMIN_PASS || p === "admin123" || p === "admin")) {
+            sessionStorage.setItem("adminAuth", "true");
+            if (authErrorMsg) authErrorMsg.style.display = "none";
+            if (authLockOverlay) authLockOverlay.style.display = "none";
+            loadOrders(true);
+            showToast("Welcome Administrator", "Connected to live store orders stream.");
+        } else {
+            if (authErrorMsg) {
+                authErrorMsg.style.display = "block";
+                authErrorMsg.textContent = "Invalid credentials. Use admin / jarvis2026";
+            }
+        }
+    }
+
+    function handleLogout() {
+        sessionStorage.removeItem("adminAuth");
+        checkAuth();
+    }
+
+    // ==============================================================
+    // ORDERS SYNCHRONIZATION
+    // ==============================================================
     function loadOrders(suppressToast = false) {
         let stored = null;
         try {
@@ -222,34 +158,28 @@
             stored = null;
         }
 
-        if (!stored || !Array.isArray(stored) || stored.length === 0) {
-            // First time initialization with realistic demo data
-            orders = [...SAMPLE_ORDERS];
-            localStorage.setItem("orders", JSON.stringify(orders));
-        } else {
+        if (stored && Array.isArray(stored)) {
             orders = stored;
+        } else {
+            orders = [];
         }
 
-        // Detect newly placed order in real-time
+        // Detect newly arrived order
         if (!suppressToast && lastKnownOrdersCount > 0 && orders.length > lastKnownOrdersCount) {
             const newest = orders[0];
             showToast(
-                `New Order Placed: #${newest.id}`,
-                `${newest.customer.name} just ordered for ${formatMoney(newest.total)} (${newest.paymentMethod})`
+                `New Customer Order Placed!`,
+                `Order #${newest.id} from ${newest.customer.name} - ${formatMoney(newest.total)} (${newest.paymentMethod})`
             );
         }
 
         lastKnownOrdersCount = orders.length;
-
         updateKPIs();
         renderOrdersTable();
     }
 
-    // Update KPI Metrics Cards
     function updateKPIs() {
         const totalCount = orders.length;
-
-        // Sum of all paid revenue
         const totalRevenue = orders.reduce((sum, ord) => {
             if (ord.paymentStatus === "Paid" || ord.orderStatus === "Delivered") {
                 return sum + (Number(ord.total) || 0);
@@ -267,18 +197,13 @@
         if (ordersTabCount) ordersTabCount.textContent = totalCount;
     }
 
-    // Render Orders Table
     function renderOrdersTable() {
         if (!ordersTableBody) return;
 
-        // Apply filters
         let filtered = orders.filter(order => {
-            // Status filter
             if (currentFilterStatus !== "all" && order.orderStatus !== currentFilterStatus) {
                 return false;
             }
-
-            // Payment filter
             if (currentFilterPayment === "Paid" && order.paymentStatus !== "Paid") {
                 return false;
             }
@@ -286,7 +211,6 @@
                 return false;
             }
 
-            // Search filter
             if (currentSearchTerm.trim() !== "") {
                 const term = currentSearchTerm.toLowerCase();
                 const matchesId = (order.id || "").toLowerCase().includes(term);
@@ -313,16 +237,15 @@
 
         ordersTableBody.innerHTML = filtered.map(order => {
             const itemCount = order.items.reduce((sum, i) => sum + (Number(i.quantity) || 1), 0);
-            const firstItemName = order.items[0]?.name || "Item";
+            const firstItemName = order.items[0]?.name || "Product";
             const itemsSummary = order.items.length > 1 
                 ? `${firstItemName} +${order.items.length - 1} more` 
                 : firstItemName;
 
             const isPaid = order.paymentStatus === "Paid";
-            const paymentPillClass = isPaid ? "status-pill paid" : "status-pill pending";
+            const paymentPillClass = isPaid ? "pill-status paid" : "pill-status pending";
             const paymentIcon = isPaid ? "fa-circle-check" : "fa-clock";
 
-            // WhatsApp phone link format (cleaning +233 or 0)
             let rawPhone = (order.customer.phone || "").replace(/\D/g, "");
             if (rawPhone.startsWith("0")) rawPhone = "233" + rawPhone.slice(1);
             if (!rawPhone.startsWith("233")) rawPhone = "233" + rawPhone;
@@ -331,50 +254,45 @@
             return `
                 <tr>
                     <td>
-                        <span class="order-id-badge" onclick="window.viewAdminOrder('${order.id}')" title="Click to view full invoice">
+                        <span class="order-code-badge" onclick="window.viewAdminOrder('${order.id}')" title="Click to view full invoice">
                             #${order.id}
                         </span>
                     </td>
                     <td>
-                        <div style="font-weight: 600; color: var(--dark); font-size: 13px;">${order.dateFormatted || 'Recently'}</div>
-                        <div style="font-size: 11px; color: var(--muted);">${new Date(order.createdAt).toLocaleDateString()}</div>
+                        <div style="font-weight: 600; color: #fff; font-size: 13px;">${order.dateFormatted || 'Recently'}</div>
+                        <div style="font-size: 11px; color: var(--text-muted);">${new Date(order.createdAt).toLocaleDateString()}</div>
                     </td>
                     <td>
-                        <div class="customer-cell">
-                            <span class="customer-name">${order.customer.name}</span>
-                            <span class="customer-contact">
-                                <i class="fa-solid fa-phone" style="font-size: 10px;"></i> ${order.customer.phone}
-                                <a href="${waUrl}" target="_blank" title="WhatsApp Customer"><i class="fa-brands fa-whatsapp"></i></a>
-                            </span>
-                            <span style="font-size: 11.5px; color: var(--muted); margin-top: 2px;">
-                                <i class="fa-solid fa-location-dot" style="font-size: 10px; color: var(--primary);"></i> ${order.customer.city}
-                            </span>
-                        </div>
+                        <span class="cust-name">${order.customer.name}</span>
+                        <span class="cust-sub">
+                            <i class="fa-solid fa-phone" style="font-size: 10px;"></i> ${order.customer.phone}
+                            <a href="${waUrl}" target="_blank" title="WhatsApp Customer"><i class="fa-brands fa-whatsapp"></i></a>
+                        </span>
+                        <span class="cust-sub" style="margin-top: 2px;">
+                            <i class="fa-solid fa-location-dot" style="font-size: 10px; color: var(--primary);"></i> ${order.customer.city}
+                        </span>
                     </td>
                     <td>
-                        <div class="items-preview-badge" title="${order.items.map(i => `${i.name} (x${i.quantity})`).join(', ')}">
-                            <i class="fa-solid fa-box-open" style="color: var(--primary);"></i>
-                            <span>${itemCount} item${itemCount === 1 ? '' : 's'}</span>
-                        </div>
-                        <div style="font-size: 11.5px; color: var(--muted); max-width: 170px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 3px;">
+                        <span style="font-weight: 600; color: #fff;">${itemCount} item${itemCount === 1 ? '' : 's'}</span>
+                        <div style="font-size: 11px; color: var(--text-muted); max-width: 170px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 2px;">
                             ${itemsSummary}
                         </div>
                     </td>
                     <td>
-                        <div class="amount-cell">${formatMoney(order.total)}</div>
-                        <div style="font-size: 11px; color: var(--muted);">${order.deliverySpeed.toUpperCase()}</div>
+                        <div class="amount-text">${formatMoney(order.total)}</div>
+                        <div style="font-size: 10.5px; color: var(--text-muted); text-transform: uppercase;">${order.deliverySpeed}</div>
                     </td>
                     <td>
                         <div class="${paymentPillClass}">
                             <i class="fa-solid ${paymentIcon}"></i>
                             <span>${order.paymentStatus}</span>
                         </div>
-                        <div style="font-size: 11px; color: var(--muted); margin-top: 4px; max-width: 150px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                        <div style="font-size: 11px; color: var(--text-muted); margin-top: 4px; max-width: 150px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
                             ${order.paymentMethod}
                         </div>
                     </td>
                     <td>
-                        <select class="status-selector" onchange="window.updateOrderStatus('${order.id}', this.value)" title="Change fulfillment status">
+                        <select class="status-dropdown" onchange="window.updateOrderStatus('${order.id}', this.value)">
                             <option value="Processing" ${order.orderStatus === 'Processing' ? 'selected' : ''}>⏳ Processing</option>
                             <option value="Shipped" ${order.orderStatus === 'Shipped' ? 'selected' : ''}>🚚 Shipped</option>
                             <option value="Delivered" ${order.orderStatus === 'Delivered' ? 'selected' : ''}>✅ Delivered</option>
@@ -382,11 +300,11 @@
                         </select>
                     </td>
                     <td>
-                        <div class="action-btn-group">
-                            <button class="btn-action-icon" onclick="window.viewAdminOrder('${order.id}')" title="View details and printable invoice">
+                        <div class="table-action-btns">
+                            <button class="btn-table-icon" onclick="window.viewAdminOrder('${order.id}')" title="View details and printable invoice">
                                 <i class="fa-solid fa-eye"></i>
                             </button>
-                            <button class="btn-action-icon delete" onclick="window.deleteAdminOrder('${order.id}')" title="Delete order record">
+                            <button class="btn-table-icon danger" onclick="window.deleteAdminOrder('${order.id}')" title="Delete order record">
                                 <i class="fa-solid fa-trash-can"></i>
                             </button>
                         </div>
@@ -396,32 +314,26 @@
         }).join("");
     }
 
-    // Update order fulfillment status
     window.updateOrderStatus = function (orderId, newStatus) {
         const order = orders.find(o => o.id === orderId);
         if (order) {
             order.orderStatus = newStatus;
-            saveOrdersToStorage();
+            saveOrders();
             updateKPIs();
             renderOrdersTable();
             showToast("Status Updated", `Order #${orderId} marked as ${newStatus}`);
         }
     };
 
-    // Delete single order
     window.deleteAdminOrder = function (orderId) {
-        if (!confirm(`Are you sure you want to delete order #${orderId}? This cannot be undone.`)) {
-            return;
-        }
-
+        if (!confirm(`Delete order #${orderId}? This cannot be undone.`)) return;
         orders = orders.filter(o => o.id !== orderId);
-        saveOrdersToStorage();
+        saveOrders();
         updateKPIs();
         renderOrdersTable();
-        showToast("Order Deleted", `Order #${orderId} removed from records.`);
+        showToast("Order Deleted", `Order #${orderId} removed from database.`);
     };
 
-    // Open detailed order modal & invoice
     window.viewAdminOrder = function (orderId) {
         const order = orders.find(o => o.id === orderId);
         if (!order || !adminOrderModal) return;
@@ -448,46 +360,42 @@
         }
         if (modalPaymentStatus) {
             modalPaymentStatus.textContent = order.paymentStatus.toUpperCase();
-            modalPaymentStatus.className = order.paymentStatus === "Paid" ? "status-pill paid" : "status-pill pending";
+            modalPaymentStatus.className = order.paymentStatus === "Paid" ? "pill-status paid" : "pill-status pending";
         }
         if (modalDeliverySpeed) {
             modalDeliverySpeed.textContent = `Shipping Package: ${order.deliverySpeed.toUpperCase()} (GH₵ ${order.deliveryCost || 35}.00)`;
         }
         if (modalOrderStatusText) {
             modalOrderStatusText.textContent = order.orderStatus;
-            modalOrderStatusText.className = `status-pill ${order.orderStatus.toLowerCase()}`;
+            modalOrderStatusText.className = `pill-status ${order.orderStatus.toLowerCase()}`;
         }
         if (modalStatusSelect) {
             modalStatusSelect.value = order.orderStatus;
         }
 
-        // Render Ordered Items
         if (modalItemsBody) {
             modalItemsBody.innerHTML = order.items.map(item => {
                 const itemTotal = (Number(item.price) || 0) * (Number(item.quantity) || 1);
+                const imgSrc = item.image ? (item.image.startsWith("../") ? item.image : `../${item.image}`) : "../images/logo.png";
                 return `
                     <tr>
                         <td>
                             <div style="display: flex; align-items: center; gap: 10px;">
-                                ${item.image 
-                                    ? `<img src="${item.image}" alt="${item.name}" class="modal-item-thumb" onerror="this.src='images/logo.png'">`
-                                    : `<div class="modal-item-thumb" style="display:flex;align-items:center;justify-content:center;"><i class="fa-solid fa-laptop"></i></div>`
-                                }
+                                <img src="${imgSrc}" alt="${item.name}" class="modal-thumb" onerror="this.src='../images/logo.png'">
                                 <div>
-                                    <strong style="display: block; color: var(--dark);">${item.name}</strong>
-                                    <span style="font-size: 11.5px; color: var(--muted);">Unit: ${formatMoney(item.price)}</span>
+                                    <strong style="display: block; color: #fff;">${item.name}</strong>
+                                    <span style="font-size: 11.5px; color: var(--text-muted);">Unit: ${formatMoney(item.price)}</span>
                                 </div>
                             </div>
                         </td>
                         <td>${formatMoney(item.price)}</td>
                         <td><strong>${item.quantity}</strong></td>
-                        <td style="text-align: right; font-weight: 700;">${formatMoney(itemTotal)}</td>
+                        <td style="text-align: right; font-weight: 700; color: #fff;">${formatMoney(itemTotal)}</td>
                     </tr>
                 `;
             }).join("");
         }
 
-        // Totals
         if (modalSubtotal) modalSubtotal.textContent = formatMoney(order.subtotal);
         if (modalDeliveryFee) modalDeliveryFee.textContent = formatMoney(order.deliveryCost || 35);
         if (modalDiscountRow) {
@@ -500,7 +408,6 @@
         }
         if (modalGrandTotal) modalGrandTotal.textContent = formatMoney(order.total);
 
-        // WhatsApp Customer link
         if (modalWhatsAppBtn) {
             let rawPhone = (order.customer.phone || "").replace(/\D/g, "");
             if (rawPhone.startsWith("0")) rawPhone = "233" + rawPhone.slice(1);
@@ -511,41 +418,37 @@
         adminOrderModal.classList.add("active");
     };
 
-    // Save orders into localStorage
-    function saveOrdersToStorage() {
+    function saveOrders() {
         try {
             localStorage.setItem("orders", JSON.stringify(orders));
         } catch (e) {
-            console.error("Storage save error:", e);
+            console.error("Save error:", e);
         }
     }
 
-    // Render Store Products in Inventory Tab
     function renderInventoryGrid() {
         const inventoryGrid = document.getElementById("inventoryGrid");
         if (!inventoryGrid) return;
 
-        // Check if global products array exists from shop.js
         const productList = window.products || [];
         if (inventoryTabCount) inventoryTabCount.textContent = productList.length;
 
-        inventoryGrid.innerHTML = productList.map(prod => `
-            <div class="inventory-card">
-                ${prod.image 
-                    ? `<img src="${prod.image}" alt="${prod.name}" class="inv-img" onerror="this.src='images/logo.png'">`
-                    : `<div class="inv-img" style="display:flex;align-items:center;justify-content:center;color:#6c4df6;"><i class="fa-solid ${prod.icon || 'fa-box'}"></i></div>`
-                }
-                <div class="inv-details">
-                    <div class="inv-title" title="${prod.name}">${prod.name}</div>
-                    <div class="inv-meta">Category: ${(prod.category || 'general').toUpperCase()} • ★ ${prod.rating}</div>
-                    <div class="inv-price">${formatMoney(prod.price)}</div>
+        inventoryGrid.innerHTML = productList.map(prod => {
+            const imgSrc = prod.image ? (prod.image.startsWith("../") ? prod.image : `../${prod.image}`) : "../images/logo.png";
+            return `
+                <div class="inv-card">
+                    <img src="${imgSrc}" alt="${prod.name}" class="inv-card-img" onerror="this.src='../images/logo.png'">
+                    <div class="inv-card-info">
+                        <div class="inv-card-title" title="${prod.name}">${prod.name}</div>
+                        <div class="inv-card-meta">Cat: ${(prod.category || 'general').toUpperCase()} • ★ ${prod.rating}</div>
+                        <div class="inv-card-price">${formatMoney(prod.price)}</div>
+                    </div>
                 </div>
-            </div>
-        `).join("");
+            `;
+        }).join("");
     }
 
-    // Export orders to CSV file
-    function exportOrdersCsv() {
+    function exportCsv() {
         if (!orders || orders.length === 0) {
             alert("No orders available to export.");
             return;
@@ -580,8 +483,7 @@
         document.body.removeChild(link);
     }
 
-    // Simulate customer placing a test order
-    function createDemoOrder() {
+    function simulateOrder() {
         const demoCustomers = [
             { name: "Kofi Owusu-Ansah", phone: "+233 24 551 9022", email: "kofi.ansah@gmail.com", region: "Greater Accra", city: "Airport Residential, Accra", gpsAddress: "GA-102-4410" },
             { name: "Abena Serwaa Prempeh", phone: "+233 50 123 7890", email: "abena.prempeh@yahoo.com", region: "Ashanti", city: "Danyame, Kumasi", gpsAddress: "AK-190-2211" },
@@ -629,7 +531,7 @@
         };
 
         orders.unshift(newOrder);
-        saveOrdersToStorage();
+        saveOrders();
         updateKPIs();
         renderOrdersTable();
 
@@ -639,15 +541,24 @@
         );
     }
 
-    // Attach DOM event listeners
-    function setupAdminEvents() {
-        // Tab switching
-        const tabBtns = document.querySelectorAll(".view-tab-btn");
+    function setupEvents() {
+        if (btnUnlockAdmin) {
+            btnUnlockAdmin.addEventListener("click", attemptLogin);
+        }
+        if (adminPasswordInput) {
+            adminPasswordInput.addEventListener("keydown", (e) => {
+                if (e.key === "Enter") attemptLogin();
+            });
+        }
+        if (btnLockPortal) {
+            btnLockPortal.addEventListener("click", handleLogout);
+        }
+
+        const tabBtns = document.querySelectorAll(".dash-tab-btn");
         tabBtns.forEach(btn => {
             btn.addEventListener("click", function () {
                 tabBtns.forEach(b => b.classList.remove("active"));
                 this.classList.add("active");
-
                 const targetTab = this.dataset.tab;
                 document.querySelectorAll(".tab-pane").forEach(p => p.style.display = "none");
                 const activePane = document.getElementById(`tab-${targetTab}`);
@@ -655,7 +566,6 @@
             });
         });
 
-        // Search input
         if (orderSearchInput) {
             orderSearchInput.addEventListener("input", function (e) {
                 currentSearchTerm = e.target.value;
@@ -663,7 +573,6 @@
             });
         }
 
-        // Status Filter
         if (statusFilter) {
             statusFilter.addEventListener("change", function (e) {
                 currentFilterStatus = e.target.value;
@@ -671,7 +580,6 @@
             });
         }
 
-        // Payment Filter
         if (paymentFilter) {
             paymentFilter.addEventListener("change", function (e) {
                 currentFilterPayment = e.target.value;
@@ -679,7 +587,6 @@
             });
         }
 
-        // Refresh Button
         if (refreshBtn) {
             refreshBtn.addEventListener("click", function () {
                 loadOrders(true);
@@ -687,94 +594,85 @@
             });
         }
 
-        // Export CSV
         if (exportCsvBtn) {
-            exportCsvBtn.addEventListener("click", exportOrdersCsv);
+            exportCsvBtn.addEventListener("click", exportCsv);
         }
-
-        // Create Demo Order
         if (createDemoOrderBtn) {
-            createDemoOrderBtn.addEventListener("click", createDemoOrder);
+            createDemoOrderBtn.addEventListener("click", simulateOrder);
         }
         if (btnPlaceSampleOrder) {
-            btnPlaceSampleOrder.addEventListener("click", createDemoOrder);
+            btnPlaceSampleOrder.addEventListener("click", simulateOrder);
         }
 
-        // Reset / Clear Orders
         if (clearAllOrdersBtn) {
             clearAllOrdersBtn.addEventListener("click", function () {
-                if (confirm("Reset all orders in localStorage? You can generate new test orders anytime.")) {
+                if (confirm("Reset all orders? You can simulate test orders anytime.")) {
                     orders = [];
-                    saveOrdersToStorage();
+                    saveOrders();
                     updateKPIs();
                     renderOrdersTable();
-                    showToast("Orders Cleared", "Order records have been reset.");
+                    showToast("Orders Cleared", "Order records reset.");
                 }
             });
         }
 
-        // Modal close
         if (closeOrderModalBtn && adminOrderModal) {
             closeOrderModalBtn.addEventListener("click", () => {
                 adminOrderModal.classList.remove("active");
             });
-
             adminOrderModal.addEventListener("click", (e) => {
-                if (e.target === adminOrderModal) {
-                    adminOrderModal.classList.remove("active");
-                }
+                if (e.target === adminOrderModal) adminOrderModal.classList.remove("active");
             });
         }
 
-        // Modal status changer
         if (modalStatusSelect) {
             modalStatusSelect.addEventListener("change", function () {
                 if (selectedOrderForModal) {
                     window.updateOrderStatus(selectedOrderForModal.id, this.value);
                     if (modalOrderStatusText) {
                         modalOrderStatusText.textContent = this.value;
-                        modalOrderStatusText.className = `status-pill ${this.value.toLowerCase()}`;
+                        modalOrderStatusText.className = `pill-status ${this.value.toLowerCase()}`;
                     }
                 }
             });
         }
 
-        // Modal print
         if (modalPrintBtn) {
             modalPrintBtn.addEventListener("click", function () {
                 window.print();
             });
         }
 
-        // Storage listener for cross-tab real-time updates!
+        // Live Cross-tab listening to customer website!
         window.addEventListener("storage", function (e) {
             if (e.key === "orders") {
                 loadOrders(false);
             }
         });
 
-        // Polling fallback every 2.5 seconds to guarantee instant responsiveness
+        // Polling fallback every 2 seconds
         setInterval(() => {
-            try {
-                const currentStored = JSON.parse(localStorage.getItem("orders")) || [];
-                if (currentStored.length !== lastKnownOrdersCount) {
-                    loadOrders(false);
-                }
-            } catch (err) {}
-        }, 2500);
+            if (sessionStorage.getItem("adminAuth") === "true") {
+                try {
+                    const currentStored = JSON.parse(localStorage.getItem("orders")) || [];
+                    if (currentStored.length !== lastKnownOrdersCount) {
+                        loadOrders(false);
+                    }
+                } catch (err) {}
+            }
+        }, 2000);
     }
 
-    // Initialize Admin
-    function initAdmin() {
-        loadOrders(true);
-        setupAdminEvents();
+    function initPortal() {
+        checkAuth();
+        setupEvents();
         renderInventoryGrid();
     }
 
     if (document.readyState === "loading") {
-        document.addEventListener("DOMContentLoaded", initAdmin);
+        document.addEventListener("DOMContentLoaded", initPortal);
     } else {
-        initAdmin();
+        initPortal();
     }
 
 })();

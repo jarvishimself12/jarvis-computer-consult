@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jarvis Admin | Store Management & Order Command Center</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <!-- Admin CSS -->
+    <link rel="stylesheet" href="admin.css">
+</head>
+
+<body>
+
+    <!-- ==============================================================
+         ADMIN ACCESS LOCK SCREEN (PROTECTS SENSITIVE STORE DATA)
+    ============================================================== -->
+    <div id="authLockOverlay" class="auth-lock-overlay">
+        <div class="auth-lock-card">
+            <div class="lock-shield-icon">
+                <i class="fa-solid fa-shield-halved"></i>
+            </div>
+            <h2>Admin Command Center</h2>
+            <p class="subtitle">Enter administrative credentials to access customer orders and revenue analytics.</p>
+
+            <div class="auth-input-group">
+                <label for="adminUsername">Administrator ID</label>
+                <div class="auth-input-wrap">
+                    <i class="fa-solid fa-user-shield"></i>
+                    <input type="text" id="adminUsername" class="auth-input" value="admin" autocomplete="username">
+                </div>
+            </div>
+
+            <div class="auth-input-group">
+                <label for="adminPassword">Master PIN / Password</label>
+                <div class="auth-input-wrap">
+                    <i class="fa-solid fa-key"></i>
+                    <input type="password" id="adminPassword" class="auth-input" placeholder="••••••••" autocomplete="current-password">
+                </div>
+            </div>
+
+            <button type="button" id="btnUnlockAdmin" class="btn-auth-unlock">
+                <i class="fa-solid fa-unlock-keyhole"></i>
+                Unlock Admin Portal
+            </button>
+
+            <div id="authErrorMsg" class="auth-error-msg">Invalid password. Please check your credentials.</div>
+
+            <div class="auth-hint">
+                Default Access Credentials: <strong>Username:</strong> admin &nbsp;|&nbsp; <strong>Password:</strong> jarvis2026
+            </div>
+        </div>
+    </div>
+
+    <!-- ==============================================================
+         STANDALONE ADMIN TOPBAR
+    ============================================================== -->
+    <header class="portal-topbar">
+        <div class="portal-topbar-inner">
+            <div class="portal-brand">
+                <img src="../images/logo.png" alt="Jarvis Computer Consult Logo" class="portal-logo-img">
+                <div class="portal-title-text">
+                    <strong>JARVIS ADMIN</strong>
+                    <span>ORDER MANAGEMENT PORTAL</span>
+                </div>
+            </div>
+
+            <div class="store-connection-pill" title="Synchronized with customer store orders in real time">
+                <span class="pulse-led"></span>
+                <span>Connected to Storefront (Real-Time)</span>
+            </div>
+
+            <div class="topbar-actions">
+                <button type="button" class="btn-topbar" id="createDemoOrderBtn" title="Simulate a customer order">
+                    <i class="fa-solid fa-plus-circle"></i>
+                    Simulate Order
+                </button>
+                <a href="../home.html" target="_blank" class="btn-topbar" title="Open public storefront in a new tab">
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                    Visit Store
+                </a>
+                <button type="button" class="btn-topbar btn-lock" id="btnLockPortal" title="Lock Admin Portal">
+                    <i class="fa-solid fa-lock"></i>
+                    Lock Portal
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- REAL-TIME ORDER ALERT TOAST -->
+    <div id="realtimeToast" class="realtime-toast">
+        <div class="toast-bell">
+            <i class="fa-solid fa-bell"></i>
+        </div>
+        <div>
+            <strong id="toastTitle" style="display: block; font-size: 13.5px; color: #fff;">New Customer Order!</strong>
+            <span id="toastDesc" style="font-size: 12px; color: #cbd5e1;">A new order just arrived from the website.</span>
+        </div>
+    </div>
+
+    <!-- ==============================================================
+         MAIN DASHBOARD
+    ============================================================== -->
+    <main class="portal-main">
+
+        <!-- TITLE ROW -->
+        <div class="portal-header-row">
+            <div>
+                <h1>Store Order Management</h1>
+                <p>Real-time order feed, customer fulfillment, MoMo & Card payment tracking, and inventory control.</p>
+            </div>
+            <div class="portal-tools">
+                <button type="button" class="btn-topbar" id="exportCsvBtn">
+                    <i class="fa-solid fa-file-csv"></i>
+                    Export CSV
+                </button>
+                <button type="button" class="btn-topbar" id="clearAllOrdersBtn">
+                    <i class="fa-solid fa-trash-can"></i>
+                    Reset Records
+                </button>
+                <button type="button" class="btn-topbar" id="refreshBtn" style="background: var(--primary); color: #fff; border-color: var(--primary);">
+                    <i class="fa-solid fa-rotate"></i>
+                    Refresh Orders
+                </button>
+            </div>
+        </div>
+
+        <!-- KPI SUMMARY METRICS -->
+        <div class="kpi-row">
+            <div class="kpi-box">
+                <div class="kpi-text">
+                    <span class="label">PAID REVENUE</span>
+                    <h2 id="kpiRevenue">GH₵ 0.00</h2>
+                </div>
+                <div class="kpi-symbol revenue">
+                    <i class="fa-solid fa-cedi-sign"></i>
+                </div>
+            </div>
+
+            <div class="kpi-box">
+                <div class="kpi-text">
+                    <span class="label">TOTAL ORDERS</span>
+                    <h2 id="kpiTotalOrders">0</h2>
+                </div>
+                <div class="kpi-symbol orders">
+                    <i class="fa-solid fa-boxes-stacked"></i>
+                </div>
+            </div>
+
+            <div class="kpi-box">
+                <div class="kpi-text">
+                    <span class="label">PROCESSING / NEW</span>
+                    <h2 id="kpiProcessing">0</h2>
+                </div>
+                <div class="kpi-symbol pending">
+                    <i class="fa-solid fa-hourglass-half"></i>
+                </div>
+            </div>
+
+            <div class="kpi-box">
+                <div class="kpi-text">
+                    <span class="label">DELIVERED & COMPLETE</span>
+                    <h2 id="kpiDelivered">0</h2>
+                </div>
+                <div class="kpi-symbol completed">
+                    <i class="fa-solid fa-circle-check"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- TABS -->
+        <div class="dashboard-tab-bar">
+            <button type="button" class="dash-tab-btn active" data-tab="orders">
+                <i class="fa-solid fa-clipboard-list"></i>
+                Incoming Customer Orders
+                <span class="dash-badge" id="ordersTabCount">0</span>
+            </button>
+            <button type="button" class="dash-tab-btn" data-tab="inventory">
+                <i class="fa-solid fa-warehouse"></i>
+                Product Inventory
+                <span class="dash-badge" id="inventoryTabCount">42</span>
+            </button>
+        </div>
+
+        <!-- TAB 1: ORDERS TABLE -->
+        <section id="tab-orders" class="tab-pane">
+            <div class="dash-content-card">
+                <!-- FILTER & SEARCH -->
+                <div class="table-filter-bar">
+                    <div class="search-field-wrap">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <input type="text" id="orderSearchInput" placeholder="Filter by Order ID, Customer Name, Phone, or City...">
+                    </div>
+                    <div class="filter-group">
+                        <select id="statusFilter" class="filter-select">
+                            <option value="all">All Fulfillment Statuses</option>
+                            <option value="Processing">Processing</option>
+                            <option value="Shipped">Shipped</option>
+                            <option value="Delivered">Delivered</option>
+                            <option value="Cancelled">Cancelled</option>
+                        </select>
+                        <select id="paymentFilter" class="filter-select">
+                            <option value="all">All Payments</option>
+                            <option value="Paid">Paid</option>
+                            <option value="Pending">Pending Payment</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- TABLE -->
+                <div class="responsive-table-wrap">
+                    <table class="orders-master-table">
+                        <thead>
+                            <tr>
+                                <th>Order Ref</th>
+                                <th>Date & Time</th>
+                                <th>Customer & Contact</th>
+                                <th>Items</th>
+                                <th>Total</th>
+                                <th>Payment Method</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ordersTableBody">
+                            <!-- Injected dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- EMPTY STATE -->
+                <div id="emptyOrdersNotice" style="text-align: center; padding: 60px 20px; color: var(--text-muted); display: none;">
+                    <i class="fa-solid fa-inbox" style="font-size: 48px; color: #433d6b; margin-bottom: 14px; display: block;"></i>
+                    <h3 style="font-size: 18px; color: #fff; margin-bottom: 6px;">No Customer Orders Yet</h3>
+                    <p style="font-size: 13.5px; margin-bottom: 18px;">When customers checkout and pay on the website, their orders will appear here automatically.</p>
+                    <button type="button" class="btn-topbar" id="btnPlaceSampleOrder" style="background: var(--primary); color: #fff;">
+                        <i class="fa-solid fa-plus-circle"></i>
+                        Simulate Test Order
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 2: INVENTORY -->
+        <section id="tab-inventory" class="tab-pane" style="display: none;">
+            <div class="dash-content-card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <div>
+                        <h2 style="font-size: 18px; font-weight: 800; color: #fff;">Store Catalog Inventory</h2>
+                        <p style="font-size: 13px; color: var(--text-muted);">Active products loaded from shop.js</p>
+                    </div>
+                    <a href="../shop.html" target="_blank" class="btn-topbar" style="background: var(--primary); color: #fff;">
+                        <i class="fa-solid fa-store"></i>
+                        View in Public Shop
+                    </a>
+                </div>
+                <div class="inventory-cards-grid" id="inventoryGrid">
+                    <!-- Injected dynamically -->
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ==============================================================
+         ORDER DETAILS & INVOICE MODAL
+    ============================================================== -->
+    <div id="adminOrderModal" class="modal-overlay">
+        <div class="modal-window">
+            <div class="modal-top">
+                <div>
+                    <h2 style="font-size: 20px; font-weight: 800; color: #fff;">Customer Order & Official Invoice</h2>
+                    <p id="modalOrderDate" style="font-size: 13px; color: var(--text-muted);">Date Placed: ---</p>
+                </div>
+                <button type="button" class="btn-close-x" id="closeOrderModalBtn">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <!-- DETAILS GRID -->
+            <div class="modal-details-grid">
+                <div>
+                    <strong>Customer Information:</strong>
+                    <span id="modalCustomerName" style="color: #fff; font-weight: 600;">---</span><br>
+                    <span id="modalCustomerPhone">---</span><br>
+                    <span id="modalCustomerEmail">---</span>
+                </div>
+                <div>
+                    <strong>Delivery Location & Digital Address:</strong>
+                    <span id="modalCustomerAddress">---</span><br>
+                    <span id="modalCustomerGPS">Digital GPS: ---</span><br>
+                    <span id="modalCustomerNotes">Notes: None</span>
+                </div>
+                <div>
+                    <strong>Payment Information:</strong>
+                    <span id="modalPaymentMethod">Method: ---</span><br>
+                    <span>Status: <strong id="modalPaymentStatus" class="pill-status paid">PAID</strong></span>
+                </div>
+                <div>
+                    <strong>Shipping & Fulfillment:</strong>
+                    <span id="modalDeliverySpeed">Standard Courier</span><br>
+                    <span>Order Status: <strong id="modalOrderStatusText" class="pill-status processing">Processing</strong></span>
+                </div>
+            </div>
+
+            <!-- ITEMS TABLE -->
+            <table class="modal-items-table">
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Price</th>
+                        <th>Quantity</th>
+                        <th style="text-align: right;">Total</th>
+                    </tr>
+                </thead>
+                <tbody id="modalItemsBody">
+                    <!-- Injected by JS -->
+                </tbody>
+            </table>
+
+            <!-- TOTALS BOX -->
+            <div class="modal-summary-box">
+                <div class="modal-summary-row">
+                    <span>Subtotal:</span>
+                    <strong id="modalSubtotal" style="color: #fff;">GH₵ 0.00</strong>
+                </div>
+                <div class="modal-summary-row">
+                    <span>Delivery Fee:</span>
+                    <strong id="modalDeliveryFee" style="color: #fff;">GH₵ 0.00</strong>
+                </div>
+                <div class="modal-summary-row" id="modalDiscountRow" style="display: none; color: var(--success);">
+                    <span>Discount:</span>
+                    <strong id="modalDiscount">-GH₵ 0.00</strong>
+                </div>
+                <div class="modal-summary-row grand">
+                    <span>Grand Total:</span>
+                    <strong id="modalGrandTotal" style="color: #a78bfa; font-size: 17px;">GH₵ 0.00</strong>
+                </div>
+            </div>
+
+            <!-- FOOTER ACTIONS -->
+            <div class="modal-bot-actions">
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <label style="font-size: 13px; font-weight: 700; color: #fff;">Update Status:</label>
+                    <select id="modalStatusSelect" class="status-dropdown" style="padding: 8px 14px;">
+                        <option value="Processing">Processing</option>
+                        <option value="Shipped">Shipped</option>
+                        <option value="Delivered">Delivered</option>
+                        <option value="Cancelled">Cancelled</option>
+                    </select>
+                </div>
+                <div style="display: flex; gap: 10px;">
+                    <a id="modalWhatsAppBtn" href="#" target="_blank" class="btn-topbar" style="color: #34d399; border-color: rgba(52, 211, 153, 0.4); background: rgba(52, 211, 153, 0.1);">
+                        <i class="fa-brands fa-whatsapp"></i>
+                        WhatsApp Customer
+                    </a>
+                    <button type="button" id="modalPrintBtn" class="btn-topbar" style="background: var(--primary); color: #fff; border-color: var(--primary);">
+                        <i class="fa-solid fa-print"></i>
+                        Print Official Invoice
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="../shop.js"></script>
+    <script src="admin.js"></script>
+</body>
+
+</html>
