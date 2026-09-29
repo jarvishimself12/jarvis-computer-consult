@@ -429,6 +429,137 @@
     </main>
 
     <!-- ==========================================
+         MOMO PHONE PROMPT MODAL (USSD SIMULATION)
+    =========================================== -->
+    <div id="momoPromptModal" class="order-modal-backdrop momo-prompt-backdrop">
+        <div class="momo-modal-container">
+            <!-- Helper Header Banner -->
+            <div class="momo-prompt-helper">
+                <div class="helper-text-wrap">
+                    <i class="fa-solid fa-mobile-screen-button"></i>
+                    <span>Simulated Handset Prompt — Enter your MoMo PIN to authorize payment</span>
+                </div>
+                <button type="button" class="btn-close-momo-prompt" id="closeMomoPromptBtn" title="Cancel Prompt">&times;</button>
+            </div>
+
+            <!-- SMARTPHONE MOCKUP -->
+            <div class="phone-frame">
+                <!-- Phone Top Bar: Notch & Speaker -->
+                <div class="phone-notch">
+                    <div class="notch-speaker"></div>
+                    <div class="notch-camera"></div>
+                </div>
+
+                <!-- Phone Screen -->
+                <div class="phone-screen">
+                    <!-- Status Bar -->
+                    <div class="phone-status-bar">
+                        <span class="phone-time" id="phoneClock">12:30</span>
+                        <div class="phone-carrier-tag">
+                            <span id="phoneCarrierName">MTN GH</span>
+                        </div>
+                        <div class="phone-status-icons">
+                            <i class="fa-solid fa-signal"></i>
+                            <i class="fa-solid fa-wifi"></i>
+                            <i class="fa-solid fa-battery-full"></i>
+                        </div>
+                    </div>
+
+                    <!-- USSD Prompt Overlay Card -->
+                    <div class="ussd-card" id="ussdCard">
+                        <!-- Carrier Header Banner -->
+                        <div class="ussd-header" id="ussdHeader">
+                            <img src="images/mtn_momo.svg" alt="Network Logo" id="ussdCarrierLogo" class="ussd-logo">
+                            <div class="ussd-header-info">
+                                <span class="ussd-title" id="ussdTitle">MTN MobileMoney</span>
+                                <span class="ussd-subtitle" id="ussdCode">*170# USSD Authorization</span>
+                            </div>
+                        </div>
+
+                        <!-- Prompt Body Content -->
+                        <div class="ussd-body" id="ussdPromptBody">
+                            <div class="ussd-prompt-msg">
+                                <p class="ussd-msg-main">Authorize payment of <strong id="ussdAmount">GH₵ 0.00</strong> to <strong>JARVIS COMPUTER CONSULT</strong>?</p>
+                                <div class="ussd-meta-row">
+                                    <span>Ref: <strong id="ussdOrderRef">JCC-00000</strong></span>
+                                    <span>Fee: <strong>GH₵ 0.00</strong></span>
+                                </div>
+                            </div>
+
+                            <div class="ussd-pin-section">
+                                <label class="ussd-pin-label">Enter 4-digit MoMo PIN to approve:</label>
+                                <!-- Masked PIN Dots -->
+                                <div class="ussd-pin-display" id="ussdPinDisplay">
+                                    <span class="pin-dot" data-index="0"></span>
+                                    <span class="pin-dot" data-index="1"></span>
+                                    <span class="pin-dot" data-index="2"></span>
+                                    <span class="pin-dot" data-index="3"></span>
+                                </div>
+                                <div id="ussdPinError" class="ussd-pin-error" style="display: none;">
+                                    Please enter your 4-digit PIN
+                                </div>
+                            </div>
+
+                            <!-- Phone Keypad -->
+                            <div class="phone-keypad" id="phoneKeypad">
+                                <button type="button" class="keypad-key" data-key="1">1</button>
+                                <button type="button" class="keypad-key" data-key="2">2</button>
+                                <button type="button" class="keypad-key" data-key="3">3</button>
+                                <button type="button" class="keypad-key" data-key="4">4</button>
+                                <button type="button" class="keypad-key" data-key="5">5</button>
+                                <button type="button" class="keypad-key" data-key="6">6</button>
+                                <button type="button" class="keypad-key" data-key="7">7</button>
+                                <button type="button" class="keypad-key" data-key="8">8</button>
+                                <button type="button" class="keypad-key" data-key="9">9</button>
+                                <button type="button" class="keypad-key keypad-clear" data-action="clear">Clear</button>
+                                <button type="button" class="keypad-key" data-key="0">0</button>
+                                <button type="button" class="keypad-key keypad-backspace" data-action="backspace">
+                                    <i class="fa-solid fa-delete-left"></i>
+                                </button>
+                            </div>
+
+                            <div class="ussd-timer-row">
+                                <i class="fa-regular fa-clock"></i>
+                                <span>Session expires in: <strong id="ussdTimerCount">60s</strong></span>
+                            </div>
+
+                            <!-- USSD Action Buttons -->
+                            <div class="ussd-actions">
+                                <button type="button" id="ussdCancelBtn" class="ussd-btn ussd-btn-cancel">
+                                    Cancel
+                                </button>
+                                <button type="button" id="ussdAuthorizeBtn" class="ussd-btn ussd-btn-send">
+                                    Authorize & Pay
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Processing State (hidden by default) -->
+                        <div class="ussd-state-processing" id="ussdProcessingState" style="display: none;">
+                            <div class="ussd-spinner"></div>
+                            <h4>Authorizing Transaction...</h4>
+                            <p id="ussdProcessingText">Connecting to MoMo Gateway to verify PIN and approve payment...</p>
+                        </div>
+
+                        <!-- Approved State (hidden by default) -->
+                        <div class="ussd-state-success" id="ussdSuccessState" style="display: none;">
+                            <div class="ussd-success-icon">
+                                <i class="fa-solid fa-check"></i>
+                            </div>
+                            <h4>Payment Approved!</h4>
+                            <p id="ussdSuccessMsg">You have successfully authorized payment of GH₵ 0.00 to JARVIS COMPUTER CONSULT.</p>
+                            <span class="ussd-trans-id" id="ussdTransId">Trans ID: MM9837194625</span>
+                        </div>
+                    </div>
+
+                    <!-- Phone Home Bar (bottom swipe bar) -->
+                    <div class="phone-home-indicator"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==========================================
          ORDER SUCCESS MODAL
     =========================================== -->
     <div id="orderSuccessModal" class="order-modal-backdrop">

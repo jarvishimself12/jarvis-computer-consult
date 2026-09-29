@@ -46,6 +46,33 @@
     const receiptTotal = document.getElementById("receiptTotal");
     const printReceiptBtn = document.getElementById("printReceiptBtn");
 
+    // MoMo Handset Prompt Elements
+    const momoPromptModal = document.getElementById("momoPromptModal");
+    const closeMomoPromptBtn = document.getElementById("closeMomoPromptBtn");
+    const phoneClock = document.getElementById("phoneClock");
+    const phoneCarrierName = document.getElementById("phoneCarrierName");
+    const ussdHeader = document.getElementById("ussdHeader");
+    const ussdCarrierLogo = document.getElementById("ussdCarrierLogo");
+    const ussdTitle = document.getElementById("ussdTitle");
+    const ussdCode = document.getElementById("ussdCode");
+    const ussdAmount = document.getElementById("ussdAmount");
+    const ussdOrderRef = document.getElementById("ussdOrderRef");
+    const ussdPinError = document.getElementById("ussdPinError");
+    const ussdTimerCount = document.getElementById("ussdTimerCount");
+    const ussdCancelBtn = document.getElementById("ussdCancelBtn");
+    const ussdAuthorizeBtn = document.getElementById("ussdAuthorizeBtn");
+    const ussdPromptBody = document.getElementById("ussdPromptBody");
+    const ussdProcessingState = document.getElementById("ussdProcessingState");
+    const ussdProcessingText = document.getElementById("ussdProcessingText");
+    const ussdSuccessState = document.getElementById("ussdSuccessState");
+    const ussdSuccessMsg = document.getElementById("ussdSuccessMsg");
+    const ussdTransId = document.getElementById("ussdTransId");
+    const phoneKeypad = document.getElementById("phoneKeypad");
+
+    let enteredPin = "";
+    let promptCountdownInterval = null;
+    let pendingOrderId = null;
+
     // Coupon Elements
     const couponCodeInput = document.getElementById("couponCode");
     const applyCouponBtn = document.getElementById("applyCouponBtn");
@@ -299,6 +326,247 @@
                 window.print();
             });
         }
+
+        // Initialize MoMo phone prompt event listeners
+        setupMomoPromptListeners();
+    }
+
+    // MoMo Prompt Handlers
+    function setupMomoPromptListeners() {
+        if (phoneKeypad) {
+            phoneKeypad.addEventListener("click", function (e) {
+                const btn = e.target.closest("button");
+                if (!btn) return;
+
+                const key = btn.dataset.key;
+                const action = btn.dataset.action;
+
+                if (key !== undefined) {
+                    handlePinInput(key);
+                } else if (action === "clear") {
+                    enteredPin = "";
+                    updatePinDots();
+                } else if (action === "backspace") {
+                    enteredPin = enteredPin.slice(0, -1);
+                    updatePinDots();
+                }
+            });
+        }
+
+        if (ussdAuthorizeBtn) {
+            ussdAuthorizeBtn.addEventListener("click", authorizeMomoTransaction);
+        }
+
+        if (ussdCancelBtn) {
+            ussdCancelBtn.addEventListener("click", function () {
+                cancelMomoPrompt("Payment authorization was cancelled. You can try again whenever you are ready.");
+            });
+        }
+
+        if (closeMomoPromptBtn) {
+            closeMomoPromptBtn.addEventListener("click", function () {
+                cancelMomoPrompt("Payment prompt dismissed.");
+            });
+        }
+
+        // Physical keyboard support while prompt is open
+        window.addEventListener("keydown", function (e) {
+            if (!momoPromptModal || !momoPromptModal.classList.contains("active")) return;
+
+            if (e.key >= "0" && e.key <= "9") {
+                handlePinInput(e.key);
+            } else if (e.key === "Backspace") {
+                enteredPin = enteredPin.slice(0, -1);
+                updatePinDots();
+            } else if (e.key === "Escape") {
+                cancelMomoPrompt("Payment authorization cancelled.");
+            } else if (e.key === "Enter") {
+                authorizeMomoTransaction();
+            }
+        });
+    }
+
+    function handlePinInput(digit) {
+        if (enteredPin.length < 4) {
+            enteredPin += digit;
+            updatePinDots();
+            if (ussdPinError) ussdPinError.style.display = "none";
+        }
+    }
+
+    function updatePinDots() {
+        const dots = document.querySelectorAll(".pin-dot");
+        dots.forEach((dot, index) => {
+            if (index < enteredPin.length) {
+                dot.classList.add("filled");
+            } else {
+                dot.classList.remove("filled");
+            }
+        });
+    }
+
+    function openMomoPrompt(orderId) {
+        pendingOrderId = orderId;
+        enteredPin = "";
+        updatePinDots();
+
+        const totals = calculateTotals();
+
+        // Update live phone clock
+        const now = new Date();
+        if (phoneClock) {
+            phoneClock.textContent = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        }
+
+        // Update telecom branding based on selected network
+        if (selectedMoMoNetwork === "Telecel Cash") {
+            if (phoneCarrierName) phoneCarrierName.textContent = "Telecel GH";
+            if (ussdHeader) ussdHeader.className = "ussd-header network-telecel";
+            if (ussdCarrierLogo) ussdCarrierLogo.src = "images/telecel_cash.svg";
+            if (ussdTitle) ussdTitle.textContent = "Telecel Cash";
+            if (ussdCode) ussdCode.textContent = "*110# USSD Push Prompt";
+            if (ussdProcessingText) ussdProcessingText.textContent = "Connecting to Telecel Cash Gateway to verify PIN and authorize payment...";
+        } else if (selectedMoMoNetwork === "AT Money") {
+            if (phoneCarrierName) phoneCarrierName.textContent = "AT GH";
+            if (ussdHeader) ussdHeader.className = "ussd-header network-at";
+            if (ussdCarrierLogo) ussdCarrierLogo.src = "images/at_money.svg";
+            if (ussdTitle) ussdTitle.textContent = "AT Money";
+            if (ussdCode) ussdCode.textContent = "*110# USSD Push Prompt";
+            if (ussdProcessingText) ussdProcessingText.textContent = "Connecting to AT Money Gateway to verify PIN and authorize payment...";
+        } else {
+            // Default: MTN MoMo
+            if (phoneCarrierName) phoneCarrierName.textContent = "MTN GH";
+            if (ussdHeader) ussdHeader.className = "ussd-header";
+            if (ussdCarrierLogo) ussdCarrierLogo.src = "images/mtn_momo.svg";
+            if (ussdTitle) ussdTitle.textContent = "MTN MobileMoney";
+            if (ussdCode) ussdCode.textContent = "*170# USSD Push Prompt";
+            if (ussdProcessingText) ussdProcessingText.textContent = "Connecting to MTN MoMo Gateway to verify PIN and authorize payment...";
+        }
+
+        // Set amount and reference in USSD card
+        if (ussdAmount) ussdAmount.textContent = formatMoney(totals.grandTotal);
+        if (ussdOrderRef) ussdOrderRef.textContent = orderId;
+
+        // Reset views inside USSD modal
+        if (ussdPromptBody) ussdPromptBody.style.display = "block";
+        if (ussdProcessingState) ussdProcessingState.style.display = "none";
+        if (ussdSuccessState) ussdSuccessState.style.display = "none";
+        if (ussdPinError) ussdPinError.style.display = "none";
+
+        // Show modal backdrop
+        if (momoPromptModal) {
+            momoPromptModal.classList.add("active");
+        }
+
+        // Start 60-second countdown timer
+        let timeLeft = 60;
+        if (ussdTimerCount) ussdTimerCount.textContent = `${timeLeft}s`;
+        if (promptCountdownInterval) clearInterval(promptCountdownInterval);
+
+        promptCountdownInterval = setInterval(() => {
+            timeLeft--;
+            if (ussdTimerCount) ussdTimerCount.textContent = `${timeLeft}s`;
+            if (timeLeft <= 0) {
+                clearInterval(promptCountdownInterval);
+                cancelMomoPrompt("Mobile Money authorization session timed out. Please try again.");
+            }
+        }, 1000);
+    }
+
+    function authorizeMomoTransaction() {
+        if (enteredPin.length < 4) {
+            if (ussdPinError) {
+                ussdPinError.style.display = "block";
+                ussdPinError.textContent = "Please enter your 4-digit PIN";
+            }
+            const pinDisplay = document.getElementById("ussdPinDisplay");
+            if (pinDisplay) {
+                pinDisplay.style.animation = "none";
+                setTimeout(() => { pinDisplay.style.animation = "shakeError 0.3s ease"; }, 10);
+            }
+            return;
+        }
+
+        if (promptCountdownInterval) {
+            clearInterval(promptCountdownInterval);
+        }
+
+        // Show Processing Screen inside phone
+        if (ussdPromptBody) ussdPromptBody.style.display = "none";
+        if (ussdProcessingState) ussdProcessingState.style.display = "block";
+
+        const totals = calculateTotals();
+
+        // Simulate secure telecom verification
+        setTimeout(() => {
+            playPaymentChime();
+
+            if (ussdProcessingState) ussdProcessingState.style.display = "none";
+            if (ussdSuccessState) ussdSuccessState.style.display = "block";
+            if (ussdSuccessMsg) {
+                ussdSuccessMsg.textContent = `You have successfully authorized payment of ${formatMoney(totals.grandTotal)} to JARVIS COMPUTER CONSULT.`;
+            }
+            if (ussdTransId) {
+                const randomTransId = Math.floor(1000000000 + Math.random() * 9000000000);
+                ussdTransId.textContent = `Trans ID: MM${randomTransId}`;
+            }
+
+            // Close prompt & finalize order after brief celebratory view
+            setTimeout(() => {
+                if (momoPromptModal) momoPromptModal.classList.remove("active");
+                if (placeOrderBtn) {
+                    placeOrderBtn.disabled = false;
+                    placeOrderBtn.innerHTML = `
+                        <i class="fa-solid fa-lock"></i>
+                        <span id="placeOrderText">Place Order & Pay ${formatMoney(totals.grandTotal)}</span>
+                    `;
+                }
+                finalizeOrder(pendingOrderId);
+            }, 1400);
+
+        }, 1500);
+    }
+
+    function cancelMomoPrompt(message) {
+        if (promptCountdownInterval) {
+            clearInterval(promptCountdownInterval);
+        }
+        if (momoPromptModal) {
+            momoPromptModal.classList.remove("active");
+        }
+        if (placeOrderBtn) {
+            placeOrderBtn.disabled = false;
+            const totals = calculateTotals();
+            placeOrderBtn.innerHTML = `
+                <i class="fa-solid fa-lock"></i>
+                <span id="placeOrderText">Place Order & Pay ${formatMoney(totals.grandTotal)}</span>
+            `;
+        }
+        if (message) {
+            alert(message);
+        }
+    }
+
+    function playPaymentChime() {
+        try {
+            const AudioCtx = window.AudioContext || window.webkitAudioContext;
+            if (!AudioCtx) return;
+            const ctx = new AudioCtx();
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.type = "sine";
+            const now = ctx.currentTime;
+            osc.frequency.setValueAtTime(587.33, now); // D5
+            osc.frequency.setValueAtTime(880, now + 0.12); // A5
+            gain.gain.setValueAtTime(0.12, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.45);
+            osc.start(now);
+            osc.stop(now + 0.45);
+        } catch (e) {
+            // Audio context safely ignored if blocked by browser policy
+        }
     }
 
     // Apply Coupon Code
@@ -374,7 +642,14 @@
     function handlePlaceOrder() {
         if (!validateForm()) return;
 
-        // Button loading state
+        // If Mobile Money is chosen, trigger the simulated phone prompt
+        if (selectedPaymentMode === "momo") {
+            const orderId = generateOrderId();
+            openMomoPrompt(orderId);
+            return;
+        }
+
+        // For other methods (Card, Bank, COD)
         placeOrderBtn.disabled = true;
         const originalText = placeOrderBtn.innerHTML;
         placeOrderBtn.innerHTML = `
@@ -391,8 +666,8 @@
     }
 
     // Finalize order record and store
-    function finalizeOrder() {
-        const orderId = generateOrderId();
+    function finalizeOrder(customOrderId) {
+        const orderId = customOrderId || generateOrderId();
         const totals = calculateTotals();
 
         const customer = {

@@ -1076,6 +1076,500 @@ body {
     background: #28204d;
 }
 
+/* ==========================================
+   SIMULATED MOMO PHONE PROMPT MODAL
+=========================================== */
+.momo-prompt-backdrop {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: rgba(10, 8, 24, 0.82);
+    backdrop-filter: blur(8px);
+    z-index: 10001;
+    padding: 16px;
+}
+
+.momo-prompt-backdrop.active {
+    display: flex;
+}
+
+.momo-modal-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    max-width: 380px;
+    width: 100%;
+    animation: modalPop 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.momo-prompt-helper {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    padding: 8px 14px;
+    color: #f8fafc;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    backdrop-filter: blur(6px);
+}
+
+.helper-text-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 500;
+}
+
+.helper-text-wrap i {
+    color: #facc15;
+    font-size: 14px;
+}
+
+.btn-close-momo-prompt {
+    background: transparent;
+    border: none;
+    color: #cbd5e1;
+    font-size: 20px;
+    cursor: pointer;
+    line-height: 1;
+    padding: 0 4px;
+    transition: color 0.2s;
+}
+
+.btn-close-momo-prompt:hover {
+    color: #ffffff;
+}
+
+/* SMARTPHONE MOCKUP FRAME */
+.phone-frame {
+    width: 340px;
+    max-width: 100%;
+    background: #0f172a;
+    border-radius: 42px;
+    padding: 10px;
+    box-shadow: 
+        0 25px 60px -15px rgba(0, 0, 0, 0.8),
+        0 0 0 3px #334155,
+        0 0 0 6px #1e293b,
+        inset 0 0 10px rgba(255, 255, 255, 0.15);
+    position: relative;
+    user-select: none;
+}
+
+.phone-notch {
+    position: absolute;
+    top: 14px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 110px;
+    height: 22px;
+    background: #000000;
+    border-radius: 16px;
+    z-index: 20;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.notch-speaker {
+    width: 38px;
+    height: 4px;
+    background: #27272a;
+    border-radius: 3px;
+}
+
+.notch-camera {
+    width: 9px;
+    height: 9px;
+    background: #18181b;
+    border: 1.5px solid #27272a;
+    border-radius: 50%;
+}
+
+.phone-screen {
+    background: radial-gradient(circle at 50% 15%, #1e1b4b, #09090b 85%);
+    border-radius: 32px;
+    min-height: 590px;
+    padding: 10px 10px 14px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Screen Status Bar */
+.phone-status-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 4px 10px 0;
+    font-size: 11px;
+    font-weight: 700;
+    color: #e2e8f0;
+    z-index: 10;
+}
+
+.phone-carrier-tag {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    background: rgba(255, 255, 255, 0.15);
+    padding: 2px 7px;
+    border-radius: 8px;
+}
+
+.phone-status-icons {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 10px;
+}
+
+/* USSD PROMPT CARD (POPUP DIALOG INSIDE PHONE) */
+.ussd-card {
+    background: #ffffff;
+    border-radius: 18px;
+    margin: auto 0;
+    overflow: hidden;
+    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.6);
+    animation: ussdPop 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    color: #0f172a;
+}
+
+@keyframes ussdPop {
+    from {
+        transform: translateY(20px) scale(0.95);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+    }
+}
+
+/* USSD CARRIER HEADERS (DYNAMIC PER NETWORK) */
+.ussd-header {
+    padding: 12px 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: linear-gradient(135deg, #ffcc00, #f59e0b);
+    color: #000000;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.ussd-header.network-telecel {
+    background: linear-gradient(135deg, #e60000, #b91c1c);
+    color: #ffffff;
+}
+
+.ussd-header.network-at {
+    background: linear-gradient(135deg, #0284c7, #0369a1);
+    color: #ffffff;
+}
+
+.ussd-logo {
+    height: 28px;
+    max-width: 60px;
+    object-fit: contain;
+    background: #ffffff;
+    padding: 3px 6px;
+    border-radius: 6px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+.ussd-header-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.ussd-title {
+    font-size: 13.5px;
+    font-weight: 800;
+    line-height: 1.2;
+}
+
+.ussd-subtitle {
+    font-size: 10px;
+    font-weight: 600;
+    opacity: 0.85;
+}
+
+/* USSD PROMPT BODY */
+.ussd-body {
+    padding: 14px 12px;
+    text-align: center;
+}
+
+.ussd-prompt-msg {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 10px 12px;
+    margin-bottom: 12px;
+    text-align: left;
+}
+
+.ussd-msg-main {
+    font-size: 12px;
+    line-height: 1.45;
+    color: #1e293b;
+    margin-bottom: 6px;
+}
+
+.ussd-msg-main strong {
+    color: #0f172a;
+}
+
+.ussd-meta-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 10.5px;
+    color: #64748b;
+    padding-top: 4px;
+    border-top: 1px dashed #cbd5e1;
+}
+
+.ussd-pin-section {
+    margin-bottom: 12px;
+}
+
+.ussd-pin-label {
+    display: block;
+    font-size: 11.5px;
+    font-weight: 700;
+    color: #334155;
+    margin-bottom: 8px;
+}
+
+/* PIN DOTS */
+.ussd-pin-display {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 6px;
+}
+
+.pin-dot {
+    width: 32px;
+    height: 38px;
+    border: 2px solid #cbd5e1;
+    border-radius: 8px;
+    background: #f8fafc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    font-weight: 900;
+    color: #0f172a;
+    transition: all 0.15s ease;
+}
+
+.pin-dot.filled {
+    border-color: #6c4df6;
+    background: #ede9fe;
+    transform: scale(1.05);
+}
+
+.pin-dot.filled::after {
+    content: "●";
+    font-size: 16px;
+    color: #4c1d95;
+    animation: pinPop 0.15s ease;
+}
+
+@keyframes pinPop {
+    from { transform: scale(0.5); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+.ussd-pin-error {
+    font-size: 11px;
+    color: #ef4444;
+    font-weight: 600;
+    margin-top: 4px;
+    animation: shakeError 0.3s ease;
+}
+
+@keyframes shakeError {
+    0%, 100% { transform: translateX(0); }
+    20%, 60% { transform: translateX(-5px); }
+    40%, 80% { transform: translateX(5px); }
+}
+
+/* PHONE KEYPAD */
+.phone-keypad {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+    margin-bottom: 10px;
+}
+
+.keypad-key {
+    background: #f1f5f9;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    height: 38px;
+    font-size: 16px;
+    font-weight: 700;
+    color: #0f172a;
+    cursor: pointer;
+    transition: all 0.1s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.keypad-key:hover {
+    background: #e2e8f0;
+    border-color: #cbd5e1;
+}
+
+.keypad-key:active {
+    transform: scale(0.94);
+    background: #cbd5e1;
+}
+
+.keypad-key.keypad-clear {
+    font-size: 11px;
+    font-weight: 600;
+    color: #64748b;
+}
+
+.keypad-key.keypad-backspace {
+    color: #64748b;
+    font-size: 14px;
+}
+
+.ussd-timer-row {
+    font-size: 10.5px;
+    color: #64748b;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    margin-bottom: 10px;
+}
+
+.ussd-timer-row strong {
+    color: #ef4444;
+}
+
+/* ACTION BUTTONS */
+.ussd-actions {
+    display: grid;
+    grid-template-columns: 1fr 1.6fr;
+    gap: 8px;
+}
+
+.ussd-btn {
+    border: none;
+    border-radius: 8px;
+    padding: 10px 8px;
+    font-size: 12.5px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.ussd-btn-cancel {
+    background: #f1f5f9;
+    color: #475569;
+}
+
+.ussd-btn-cancel:hover {
+    background: #e2e8f0;
+    color: #0f172a;
+}
+
+.ussd-btn-send {
+    background: #10b981;
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.35);
+}
+
+.ussd-btn-send:hover {
+    background: #059669;
+    transform: translateY(-1px);
+}
+
+/* PROCESSING & SUCCESS STATES */
+.ussd-state-processing,
+.ussd-state-success {
+    padding: 28px 16px;
+    text-align: center;
+}
+
+.ussd-spinner {
+    width: 44px;
+    height: 44px;
+    border: 3px solid #e2e8f0;
+    border-top-color: #6c4df6;
+    border-radius: 50%;
+    margin: 0 auto 16px;
+    animation: ussdSpin 0.8s linear infinite;
+}
+
+@keyframes ussdSpin {
+    to { transform: rotate(360deg); }
+}
+
+.ussd-state-processing h4,
+.ussd-state-success h4 {
+    font-size: 15px;
+    font-weight: 800;
+    color: #0f172a;
+    margin-bottom: 6px;
+}
+
+.ussd-state-processing p,
+.ussd-state-success p {
+    font-size: 12px;
+    color: #64748b;
+    line-height: 1.45;
+}
+
+.ussd-success-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: #e8f7ee;
+    color: #10b981;
+    font-size: 24px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 14px;
+    animation: pinPop 0.3s ease;
+}
+
+.ussd-trans-id {
+    display: inline-block;
+    background: #f1f5f9;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 700;
+    color: #475569;
+    margin-top: 10px;
+}
+
+/* Bottom phone indicator bar */
+.phone-home-indicator {
+    width: 90px;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.4);
+    border-radius: 10px;
+    margin: 6px auto 0;
+}
+
 /* RESPONSIVE */
 @media (max-width: 992px) {
     .checkout-grid {
@@ -1106,4 +1600,9 @@ body {
     .step-divider {
         width: 20px;
     }
+    .phone-frame {
+        width: 100%;
+        border-radius: 32px;
+    }
 }
+
