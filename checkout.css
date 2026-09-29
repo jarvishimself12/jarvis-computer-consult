@@ -1691,22 +1691,54 @@ body {
 }
 
 @media (max-width: 600px) {
+    html, body {
+        overflow-x: hidden;
+        width: 100%;
+    }
+    .checkout-container {
+        padding: 14px 10px;
+    }
+    .checkout-main-card {
+        padding: 20px 14px;
+        border-radius: 18px;
+    }
     .form-row {
         grid-template-columns: 1fr;
     }
+    .payment-tabs {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
     .momo-network-selector {
         grid-template-columns: 1fr;
+        gap: 8px;
     }
     .progress-steps {
-        font-size: 12px;
-        gap: 15px;
+        font-size: 11px;
+        gap: 6px;
     }
     .step-divider {
-        width: 20px;
+        width: 12px;
     }
     .phone-frame {
         width: 100%;
-        border-radius: 32px;
+        max-width: 325px;
+        border-radius: 28px;
+        margin: 0 auto;
+        padding: 8px;
+    }
+    .phone-screen {
+        border-radius: 22px;
+        min-height: 460px;
+    }
+    .ussd-dialog {
+        width: calc(100% - 16px);
+        margin: 0 8px;
+        padding: 18px 14px;
+    }
+    .btn-step-next, .btn-step-prev {
+        padding: 12px 18px;
+        font-size: 13px;
     }
 }
 
