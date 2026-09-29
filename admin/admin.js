@@ -259,7 +259,7 @@
                         </span>
                     </td>
                     <td>
-                        <div style="font-weight: 600; color: #fff; font-size: 13px;">${order.dateFormatted || 'Recently'}</div>
+                        <div style="font-weight: 600; color: var(--text-main); font-size: 13px;">${order.dateFormatted || 'Recently'}</div>
                         <div style="font-size: 11px; color: var(--text-muted);">${new Date(order.createdAt).toLocaleDateString()}</div>
                     </td>
                     <td>
@@ -273,7 +273,7 @@
                         </span>
                     </td>
                     <td>
-                        <span style="font-weight: 600; color: #fff;">${itemCount} item${itemCount === 1 ? '' : 's'}</span>
+                        <span style="font-weight: 700; color: var(--text-main);">${itemCount} item${itemCount === 1 ? '' : 's'}</span>
                         <div style="font-size: 11px; color: var(--text-muted); max-width: 170px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 2px;">
                             ${itemsSummary}
                         </div>
@@ -383,14 +383,14 @@
                             <div style="display: flex; align-items: center; gap: 10px;">
                                 <img src="${imgSrc}" alt="${item.name}" class="modal-thumb" onerror="this.src='../images/logo.png'">
                                 <div>
-                                    <strong style="display: block; color: #fff;">${item.name}</strong>
+                                    <strong style="display: block; color: var(--text-main);">${item.name}</strong>
                                     <span style="font-size: 11.5px; color: var(--text-muted);">Unit: ${formatMoney(item.price)}</span>
                                 </div>
                             </div>
                         </td>
                         <td>${formatMoney(item.price)}</td>
                         <td><strong>${item.quantity}</strong></td>
-                        <td style="text-align: right; font-weight: 700; color: #fff;">${formatMoney(itemTotal)}</td>
+                        <td style="text-align: right; font-weight: 700; color: var(--text-main);">${formatMoney(itemTotal)}</td>
                     </tr>
                 `;
             }).join("");

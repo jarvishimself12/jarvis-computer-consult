@@ -238,10 +238,10 @@
 
                 <!-- EMPTY STATE -->
                 <div id="emptyOrdersNotice" style="text-align: center; padding: 60px 20px; color: var(--text-muted); display: none;">
-                    <i class="fa-solid fa-inbox" style="font-size: 48px; color: #433d6b; margin-bottom: 14px; display: block;"></i>
-                    <h3 style="font-size: 18px; color: #fff; margin-bottom: 6px;">No Customer Orders Yet</h3>
+                    <i class="fa-solid fa-inbox" style="font-size: 48px; color: #cbd5e1; margin-bottom: 14px; display: block;"></i>
+                    <h3 style="font-size: 18px; color: var(--text-main); margin-bottom: 6px;">No Customer Orders Yet</h3>
                     <p style="font-size: 13.5px; margin-bottom: 18px;">When customers checkout and pay on the website, their orders will appear here automatically.</p>
-                    <button type="button" class="btn-topbar" id="btnPlaceSampleOrder" style="background: var(--primary); color: #fff;">
+                    <button type="button" class="btn-topbar" id="btnPlaceSampleOrder" style="background: var(--primary); color: #fff; border-color: var(--primary);">
                         <i class="fa-solid fa-plus-circle"></i>
                         Simulate Test Order
                     </button>
@@ -254,10 +254,10 @@
             <div class="dash-content-card">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
                     <div>
-                        <h2 style="font-size: 18px; font-weight: 800; color: #fff;">Store Catalog Inventory</h2>
+                        <h2 style="font-size: 18px; font-weight: 800; color: var(--text-main);">Store Catalog Inventory</h2>
                         <p style="font-size: 13px; color: var(--text-muted);">Active products loaded from shop.js</p>
                     </div>
-                    <a href="../shop.html" target="_blank" class="btn-topbar" style="background: var(--primary); color: #fff;">
+                    <a href="../shop.html" target="_blank" class="btn-topbar" style="background: var(--primary); color: #fff; border-color: var(--primary);">
                         <i class="fa-solid fa-store"></i>
                         View in Public Shop
                     </a>
@@ -277,7 +277,7 @@
         <div class="modal-window">
             <div class="modal-top">
                 <div>
-                    <h2 style="font-size: 20px; font-weight: 800; color: #fff;">Customer Order & Official Invoice</h2>
+                    <h2 style="font-size: 20px; font-weight: 800; color: var(--text-main);">Customer Order & Official Invoice</h2>
                     <p id="modalOrderDate" style="font-size: 13px; color: var(--text-muted);">Date Placed: ---</p>
                 </div>
                 <button type="button" class="btn-close-x" id="closeOrderModalBtn">
@@ -289,7 +289,7 @@
             <div class="modal-details-grid">
                 <div>
                     <strong>Customer Information:</strong>
-                    <span id="modalCustomerName" style="color: #fff; font-weight: 600;">---</span><br>
+                    <span id="modalCustomerName" style="color: var(--text-main); font-weight: 700;">---</span><br>
                     <span id="modalCustomerPhone">---</span><br>
                     <span id="modalCustomerEmail">---</span>
                 </div>
@@ -342,14 +342,14 @@
                 </div>
                 <div class="modal-summary-row grand">
                     <span>Grand Total:</span>
-                    <strong id="modalGrandTotal" style="color: #a78bfa; font-size: 17px;">GH₵ 0.00</strong>
+                    <strong id="modalGrandTotal" style="color: var(--primary); font-size: 17px;">GH₵ 0.00</strong>
                 </div>
             </div>
 
             <!-- FOOTER ACTIONS -->
             <div class="modal-bot-actions">
                 <div style="display: flex; gap: 10px; align-items: center;">
-                    <label style="font-size: 13px; font-weight: 700; color: #fff;">Update Status:</label>
+                    <label style="font-size: 13px; font-weight: 700; color: var(--text-main);">Update Status:</label>
                     <select id="modalStatusSelect" class="status-dropdown" style="padding: 8px 14px;">
                         <option value="Processing">Processing</option>
                         <option value="Shipped">Shipped</option>
