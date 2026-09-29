@@ -797,6 +797,22 @@
         localStorage.setItem("orders", JSON.stringify(orders));
         localStorage.setItem("latestOrder", JSON.stringify(newOrder));
 
+        // Sync order to live cloud stream so admin sees it instantly on laptop
+        try {
+            fetch("https://ntfy.sh/jcc_orders_storefront_stream_2026", {
+                method: "POST",
+                headers: {
+                    "Title": `New Order #${newOrder.id} - ${newOrder.customer.name}`,
+                    "Priority": "high",
+                    "Tags": "shopping_cart,moneybag",
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(newOrder)
+            }).catch(e => console.warn("Cloud sync warning:", e));
+        } catch (e) {
+            console.warn("Cloud dispatch error:", e);
+        }
+
         // Clear user cart
         try {
             localStorage.removeItem("cart");

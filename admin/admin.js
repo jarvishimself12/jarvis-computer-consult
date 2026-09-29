@@ -663,10 +663,133 @@
         }, 2000);
     }
 
+    // ==============================================================
+    // REAL-TIME CLOUD STREAM SYNCHRONIZATION (PHONE -> LAPTOP)
+    // ==============================================================
+    const CLOUD_SYNC_TOPIC = "jcc_orders_storefront_stream_2026";
+    let cloudEventSource = null;
+
+    function integrateRemoteOrder(rawOrder, isInitialCatchup = false) {
+        if (!rawOrder) return;
+        let ord = rawOrder;
+        if (typeof ord === "string") {
+            try { ord = JSON.parse(ord); } catch (e) { return; }
+        }
+
+        const orderId = String(ord.id || "").trim();
+        if (!orderId) return;
+
+        // Check if already in orders list
+        const alreadyExists = orders.some(o => String(o.id).trim() === orderId);
+        if (alreadyExists) return;
+
+        const cleanOrder = {
+            id: orderId,
+            createdAt: ord.createdAt || new Date().toISOString(),
+            dateFormatted: ord.dateFormatted || new Date().toLocaleDateString("en-GB", {
+                day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit"
+            }),
+            customer: ord.customer || {
+                name: "Mobile Customer",
+                phone: "0546130491",
+                email: "customer@jarvisconsult.com",
+                city: "Accra",
+                region: "Greater Accra",
+                gpsAddress: "N/A"
+            },
+            items: ord.items || [],
+            deliverySpeed: ord.deliverySpeed || "Standard",
+            deliveryCost: Number(ord.deliveryCost || ord.deliveryFee || 0),
+            subtotal: Number(ord.subtotal || ord.total || 0),
+            discount: Number(ord.discount || 0),
+            couponCode: ord.couponCode || null,
+            total: Number(ord.total || 0),
+            paymentMethod: ord.paymentMethod || "Mobile Money",
+            paymentStatus: ord.paymentStatus || "Paid",
+            orderStatus: ord.orderStatus || ord.status || "Processing"
+        };
+
+        orders.unshift(cleanOrder);
+        try {
+            localStorage.setItem("orders", JSON.stringify(orders));
+        } catch (e) {}
+
+        lastKnownOrdersCount = orders.length;
+        updateKPIs();
+        renderOrdersTable();
+
+        if (!isInitialCatchup) {
+            playOrderChime();
+            showToast(
+                "New Phone / Mobile Order Received!",
+                `Order #${cleanOrder.id} from ${cleanOrder.customer.name} - ${formatMoney(cleanOrder.total)} (${cleanOrder.paymentMethod})`
+            );
+        }
+    }
+
+    function initCloudSyncStream() {
+        // 1. Initial catch-up for orders placed while laptop was offline or asleep
+        fetch(`https://ntfy.sh/${CLOUD_SYNC_TOPIC}/json?poll=1&since=all`)
+            .then(res => res.text())
+            .then(text => {
+                if (!text) return;
+                const lines = text.split("\n");
+                lines.forEach(line => {
+                    if (!line.trim()) return;
+                    try {
+                        const eventObj = JSON.parse(line);
+                        if (eventObj.event === "message" && eventObj.message) {
+                            const orderData = typeof eventObj.message === "string" ? JSON.parse(eventObj.message) : eventObj.message;
+                            integrateRemoteOrder(orderData, true);
+                        }
+                    } catch (e) {}
+                });
+            })
+            .catch(err => console.warn("Catch-up cloud sync notice:", err));
+
+        // 2. Real-time EventSource connection (instant push when phone orders)
+        try {
+            if (cloudEventSource) {
+                cloudEventSource.close();
+            }
+            cloudEventSource = new EventSource(`https://ntfy.sh/${CLOUD_SYNC_TOPIC}/sse`);
+
+            cloudEventSource.onopen = function () {
+                const connPill = document.querySelector(".store-connection-pill");
+                if (connPill) {
+                    connPill.innerHTML = `
+                        <span class="pulse-led" style="background:#22c55e;box-shadow:0 0 10px #22c55e;"></span>
+                        <span>Live Cloud Sync Active (Phone & Laptop Connected)</span>
+                    `;
+                }
+            };
+
+            cloudEventSource.onmessage = function (event) {
+                if (!event.data) return;
+                try {
+                    const eventObj = JSON.parse(event.data);
+                    if (eventObj.event === "message" && eventObj.message) {
+                        const orderData = typeof eventObj.message === "string" ? JSON.parse(eventObj.message) : eventObj.message;
+                        integrateRemoteOrder(orderData, false);
+                    }
+                } catch (e) {
+                    console.warn("Incoming cloud event parse error:", e);
+                }
+            };
+
+            cloudEventSource.onerror = function () {
+                console.warn("Cloud stream reconnecting...");
+            };
+        } catch (e) {
+            console.warn("Could not start EventSource:", e);
+        }
+    }
+
     function initPortal() {
         checkAuth();
         setupEvents();
         renderInventoryGrid();
+        initCloudSyncStream();
     }
 
     if (document.readyState === "loading") {

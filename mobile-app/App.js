@@ -179,6 +179,22 @@ export default function App() {
       if (typeof window !== "undefined" && window.localStorage) {
         window.localStorage.setItem("orders", JSON.stringify(list));
       }
+
+      // Broadcast to live cloud stream for Admin Dashboard
+      try {
+        fetch("https://ntfy.sh/jcc_orders_storefront_stream_2026", {
+          method: "POST",
+          headers: {
+            Title: `New Mobile App Order #${orderNum} - ${orderObj.customer.name}`,
+            Priority: "high",
+            Tags: "shopping_cart,iphone,moneybag",
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(orderObj)
+        }).catch((err) => console.warn("Mobile cloud broadcast error:", err));
+      } catch (err) {
+        console.warn("Mobile cloud dispatch error:", err);
+      }
     } catch (e) {
       console.warn("Could not save order:", e);
     }
