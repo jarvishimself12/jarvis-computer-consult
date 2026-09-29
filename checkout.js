@@ -69,7 +69,15 @@
     const ussdTransId = document.getElementById("ussdTransId");
     const phoneKeypad = document.getElementById("phoneKeypad");
 
+    // Incoming SMS notification elements
+    const incomingSmsBanner = document.getElementById("incomingSmsBanner");
+    const smsSenderName = document.getElementById("smsSenderName");
+    const smsTargetPhone = document.getElementById("smsTargetPhone");
+    const smsGeneratedPin = document.getElementById("smsGeneratedPin");
+    const btnAutoFillPin = document.getElementById("btnAutoFillPin");
+
     let enteredPin = "";
+    let activeMomoPin = "1234";
     let promptCountdownInterval = null;
     let pendingOrderId = null;
 
@@ -357,6 +365,15 @@
             ussdAuthorizeBtn.addEventListener("click", authorizeMomoTransaction);
         }
 
+        // Auto-fill PIN button on incoming SMS banner
+        if (btnAutoFillPin) {
+            btnAutoFillPin.addEventListener("click", function () {
+                enteredPin = activeMomoPin;
+                updatePinDots();
+                if (ussdPinError) ussdPinError.style.display = "none";
+            });
+        }
+
         if (ussdCancelBtn) {
             ussdCancelBtn.addEventListener("click", function () {
                 cancelMomoPrompt("Payment authorization was cancelled. You can try again whenever you are ready.");
@@ -411,6 +428,13 @@
         updatePinDots();
 
         const totals = calculateTotals();
+        const momoPhoneInput = document.getElementById("momoPhone");
+        const momoPhone = (momoPhoneInput && momoPhoneInput.value.trim()) ? momoPhoneInput.value.trim() : "054 613 0491";
+
+        // Generate a 4-digit MoMo security PIN delivered to customer's phone
+        activeMomoPin = String(Math.floor(1000 + Math.random() * 9000));
+        if (smsGeneratedPin) smsGeneratedPin.textContent = activeMomoPin;
+        if (smsTargetPhone) smsTargetPhone.textContent = momoPhone;
 
         // Update live phone clock
         const now = new Date();
@@ -426,6 +450,7 @@
             if (ussdTitle) ussdTitle.textContent = "Telecel Cash";
             if (ussdCode) ussdCode.textContent = "*110# USSD Push Prompt";
             if (ussdProcessingText) ussdProcessingText.textContent = "Connecting to Telecel Cash Gateway to verify PIN and authorize payment...";
+            if (smsSenderName) smsSenderName.textContent = "Telecel Cash Alert";
         } else if (selectedMoMoNetwork === "AT Money") {
             if (phoneCarrierName) phoneCarrierName.textContent = "AT GH";
             if (ussdHeader) ussdHeader.className = "ussd-header network-at";
@@ -433,6 +458,7 @@
             if (ussdTitle) ussdTitle.textContent = "AT Money";
             if (ussdCode) ussdCode.textContent = "*110# USSD Push Prompt";
             if (ussdProcessingText) ussdProcessingText.textContent = "Connecting to AT Money Gateway to verify PIN and authorize payment...";
+            if (smsSenderName) smsSenderName.textContent = "AT Money Alert";
         } else {
             // Default: MTN MoMo
             if (phoneCarrierName) phoneCarrierName.textContent = "MTN GH";
@@ -441,6 +467,7 @@
             if (ussdTitle) ussdTitle.textContent = "MTN MobileMoney";
             if (ussdCode) ussdCode.textContent = "*170# USSD Push Prompt";
             if (ussdProcessingText) ussdProcessingText.textContent = "Connecting to MTN MoMo Gateway to verify PIN and authorize payment...";
+            if (smsSenderName) smsSenderName.textContent = "MTN MoMo Notification";
         }
 
         // Set amount and reference in USSD card
@@ -457,6 +484,14 @@
         if (momoPromptModal) {
             momoPromptModal.classList.add("active");
         }
+
+        // Trigger phone vibration on customer's device if supported
+        if (navigator.vibrate) {
+            try {
+                navigator.vibrate([120, 60, 120]);
+            } catch (e) {}
+        }
+        playNotificationPing();
 
         // Start 60-second countdown timer
         let timeLeft = 60;
@@ -566,6 +601,28 @@
             osc.stop(now + 0.45);
         } catch (e) {
             // Audio context safely ignored if blocked by browser policy
+        }
+    }
+
+    function playNotificationPing() {
+        try {
+            const AudioCtx = window.AudioContext || window.webkitAudioContext;
+            if (!AudioCtx) return;
+            const ctx = new AudioCtx();
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.type = "sine";
+            const now = ctx.currentTime;
+            osc.frequency.setValueAtTime(784, now); // G5
+            osc.frequency.setValueAtTime(1046.50, now + 0.08); // C6
+            gain.gain.setValueAtTime(0.15, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.4);
+            osc.start(now);
+            osc.stop(now + 0.4);
+        } catch (e) {
+            // Audio context safely ignored if blocked
         }
     }
 

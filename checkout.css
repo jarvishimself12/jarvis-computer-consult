@@ -1232,6 +1232,110 @@ body {
     font-size: 10px;
 }
 
+/* INCOMING SMS / MOMO NOTIFICATION BANNER */
+.incoming-sms-banner {
+    background: rgba(255, 255, 255, 0.96);
+    backdrop-filter: blur(10px);
+    border-radius: 14px;
+    padding: 9px 12px;
+    margin: 8px 0 10px;
+    color: #0f172a;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    animation: slideDownBanner 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    z-index: 15;
+}
+
+@keyframes slideDownBanner {
+    from {
+        transform: translateY(-20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.sms-banner-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 4px;
+    font-size: 11px;
+}
+
+.sms-sender-info {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 800;
+    color: #1e1b4b;
+}
+
+.sms-sender-info i {
+    color: #6c4df6;
+    font-size: 12px;
+}
+
+.sms-time-badge {
+    font-size: 9.5px;
+    color: #64748b;
+    font-weight: 600;
+}
+
+.sms-banner-body p {
+    font-size: 11px;
+    color: #334155;
+    line-height: 1.35;
+    margin: 0 0 6px;
+}
+
+.sms-pin-highlight {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    background: #f1f5f9;
+    border: 1px dashed #cbd5e1;
+    border-radius: 8px;
+    padding: 4px 8px;
+    font-size: 11px;
+}
+
+.sms-pin-highlight span {
+    color: #475569;
+    font-weight: 600;
+}
+
+.generated-pin-text {
+    font-size: 15px;
+    font-weight: 900;
+    color: #0f172a;
+    letter-spacing: 2px;
+    font-family: monospace;
+}
+
+.btn-autofill-pin {
+    background: #6c4df6;
+    color: #ffffff;
+    border: none;
+    border-radius: 6px;
+    padding: 3px 8px;
+    font-size: 10px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.15s ease, transform 0.1s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.btn-autofill-pin:hover {
+    background: #5b3ce0;
+    transform: scale(1.04);
+}
+
 /* USSD PROMPT CARD (POPUP DIALOG INSIDE PHONE) */
 .ussd-card {
     background: #ffffff;
