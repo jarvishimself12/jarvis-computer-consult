@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jarvis Computer Consult - Expo Mobile App</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #c91818;
+      --primary-dark: #9e1313;
+      --bg: #0d0f12;
+      --card-bg: rgba(22, 27, 34, 0.95);
+      --border: rgba(255, 255, 255, 0.1);
+      --text: #f0f3f6;
+      --text-muted: #8b949e;
+      --accent: #22c55e;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    body {
+      background: radial-gradient(circle at 50% 20%, #201115 0%, #0d0f12 70%);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .container {
+      max-width: 580px;
+      width: 100%;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 36px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 40px rgba(201, 24, 24, 0.15);
+      text-align: center;
+      backdrop-filter: blur(16px);
+    }
+
+    .badge-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      background: rgba(34, 197, 94, 0.12);
+      border: 1px solid rgba(34, 197, 94, 0.3);
+      border-radius: 999px;
+      color: var(--accent);
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 20px;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      background: var(--accent);
+      border-radius: 50%;
+      box-shadow: 0 0 10px var(--accent);
+      animation: pulse 1.8s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.85); }
+    }
+
+    h1 {
+      font-size: 26px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      margin-bottom: 8px;
+      background: linear-gradient(135deg, #ffffff 40%, #ff8b8b 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .subtitle {
+      color: var(--text-muted);
+      font-size: 14px;
+      margin-bottom: 26px;
+    }
+
+    .qr-wrapper {
+      background: #ffffff;
+      padding: 16px;
+      border-radius: 20px;
+      display: inline-block;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+      margin-bottom: 20px;
+    }
+
+    .qr-wrapper img {
+      width: 240px;
+      height: 240px;
+      display: block;
+      image-rendering: pixelated;
+    }
+
+    .url-box {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 10px 14px;
+      margin-bottom: 24px;
+      font-size: 13px;
+    }
+
+    .url-code {
+      color: #ff9b9b;
+      font-family: monospace;
+      font-size: 13px;
+      word-break: break-all;
+    }
+
+    .copy-btn {
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 12px;
+      cursor: pointer;
+      transition: background 0.2s;
+      white-space: nowrap;
+      margin-left: 10px;
+    }
+
+    .copy-btn:hover {
+      background: var(--primary-dark);
+    }
+
+    .steps {
+      text-align: left;
+      background: rgba(0, 0, 0, 0.25);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 20px;
+    }
+
+    .steps h3 {
+      font-size: 15px;
+      margin-bottom: 12px;
+      color: #fff;
+    }
+
+    .step-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 12px;
+      font-size: 13px;
+      color: #c9d1d9;
+    }
+
+    .step-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .step-num {
+      width: 22px;
+      height: 22px;
+      background: rgba(201, 24, 24, 0.2);
+      border: 1px solid var(--primary);
+      color: #ff8b8b;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 700;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .footer-links {
+      margin-top: 22px;
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+    }
+
+    .footer-links a {
+      color: #ff8b8b;
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 600;
+      transition: opacity 0.2s;
+    }
+
+    .footer-links a:hover {
+      opacity: 0.8;
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="badge-status">
+      <span class="status-dot"></span>
+      Metro Bundler Running (Port 8081)
+    </div>
+
+    <h1>Jarvis Computer Consult</h1>
+    <p class="subtitle">Official Expo Mobile App &bull; Ready to Scan & Preview</p>
+
+    <div class="qr-wrapper">
+      <img src="mobile-app/assets/expo-go-qr.png" alt="Expo Go QR Code">
+    </div>
+
+    <div class="url-box">
+      <span class="url-code" id="expoUrl">exp://172.20.5.59:8081</span>
+      <button class="copy-btn" onclick="copyUrl()">Copy URL</button>
+    </div>
+
+    <div class="steps">
+      <h3>How to Open on Your Phone:</h3>
+      
+      <div class="step-item">
+        <div class="step-num">1</div>
+        <div>Make sure your phone is connected to the same Wi-Fi network as this PC (<strong>mug.edu.gh / 172.20.x.x</strong>).</div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-num">2</div>
+        <div>
+          <strong>Android:</strong> Open the <strong>Expo Go</strong> app &rarr; tap <em>"Scan QR code"</em> and point camera at the QR code above.<br>
+          <em>(Or enter URL manually: <code>exp://172.20.5.59:8081</code>)</em>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-num">3</div>
+        <div>
+          <strong>iPhone / iPad:</strong> Open your iPhone's standard <strong>Camera app</strong>, scan the QR code above, and tap the prompt to open in Expo Go.
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-links">
+      <a href="http://localhost:8081" target="_blank">&rarr; Open Metro Bundler Web Debugger</a>
+      <a href="home.html">&larr; Return to Main Website</a>
+    </div>
+  </div>
+
+  <script>
+    function copyUrl() {
+      const urlText = document.getElementById('expoUrl').innerText;
+      navigator.clipboard.writeText(urlText).then(() => {
+        const btn = document.querySelector('.copy-btn');
+        btn.innerText = 'Copied!';
+        setTimeout(() => { btn.innerText = 'Copy URL'; }, 2000);
+      });
+    }
+  </script>
+</body>
+</html>

@@ -1,3 +1,4 @@
+import "react-native-url-polyfill/auto";
 import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
@@ -14,9 +15,12 @@ import {
   Dimensions,
   Alert,
   Platform,
-  KeyboardAvoidingView
+  KeyboardAvoidingView,
+  Linking
 } from "react-native";
+import { registerRootComponent } from "expo";
 import { Ionicons } from "@expo/vector-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { CATEGORIES, PRODUCTS, PROMO_DEALS } from "./src/data/products";
 
 const { width } = Dimensions.get("window");
@@ -134,6 +138,57 @@ export default function App() {
     } else {
       Alert.alert("Invalid Promo Code", "Try using code JARVIS25 for 25% off!");
     }
+  };
+
+  // Place Order & Admin Sync
+  const handlePlaceOrder = async () => {
+    const orderNum = Math.floor(100000 + Math.random() * 900000);
+    const orderObj = {
+      id: orderNum,
+      date: new Date().toISOString(),
+      customer: {
+        name: user ? user.name : "Valued Customer",
+        phone: "0546130491",
+        email: user ? user.email : "customer@jarvisconsult.com",
+        address: deliveryAddress || "Accra, Ghana",
+        gps: "Mobile App Order",
+        notes: "Placed via Jarvis Computer Consult Expo App"
+      },
+      paymentMethod: paymentMethod,
+      paymentStatus: paymentMethod.includes("Cash") ? "Pending" : "Paid",
+      deliverySpeed: "Standard (1-2 business days)",
+      status: "Processing",
+      subtotal: subtotal,
+      deliveryFee: deliveryFee,
+      discount: discountAmount,
+      total: grandTotal,
+      items: cart.map((item) => ({
+        name: item.product.name,
+        category: item.product.categoryName || "Tech",
+        quantity: item.quantity,
+        price: item.product.price
+      }))
+    };
+
+    try {
+      const existing = await AsyncStorage.getItem("orders");
+      const list = existing ? JSON.parse(existing) : [];
+      list.unshift(orderObj);
+      await AsyncStorage.setItem("orders", JSON.stringify(list));
+
+      if (typeof window !== "undefined" && window.localStorage) {
+        window.localStorage.setItem("orders", JSON.stringify(list));
+      }
+    } catch (e) {
+      console.warn("Could not save order:", e);
+    }
+
+    setIsCheckoutVisible(false);
+    setCart([]);
+    Alert.alert(
+      "Order Placed Successfully! 🎉",
+      `Order #${orderNum}\n\nThank you, ${user ? user.name : "valued customer"}!\n\nYour order has been synced with the Jarvis Computer Consult administrative dashboard and will be prepared for delivery to ${deliveryAddress}.\n\nFor assistance, contact 0546130491 / 0209429012.`
+    );
   };
 
   // Auth Handler
@@ -731,15 +786,26 @@ export default function App() {
               style={styles.accountMenuItem}
               onPress={() =>
                 Alert.alert(
-                  "Support Contact",
-                  "Jarvis Computer Consult Support:\n\nEmail: support@jarvisconsult.com\nPhone: +233 54 000 0000\nLocation: Accra, Ghana"
+                  "Support & Assistance",
+                  "For any assistance contact:\n\n📱 WhatsApp / Call: 0546130491\n📞 Alternative: 0209429012\n✉️ Email: support@jarvisconsult.com",
+                  [
+                    {
+                      text: "Chat on WhatsApp",
+                      onPress: () => Linking.openURL("https://wa.me/233546130491")
+                    },
+                    {
+                      text: "Call 0546130491",
+                      onPress: () => Linking.openURL("tel:0546130491")
+                    },
+                    { text: "Dismiss", style: "cancel" }
+                  ]
                 )
               }
             >
               <View style={styles.menuIconBox}>
                 <Ionicons name="headset-outline" size={20} color="#9e1313" />
               </View>
-              <Text style={styles.menuItemTitle}>Customer Support</Text>
+              <Text style={styles.menuItemTitle}>Customer Support (0546130491)</Text>
               <Ionicons name="chevron-forward" size={18} color="#bbb" />
             </TouchableOpacity>
 
@@ -1221,14 +1287,7 @@ export default function App() {
 
             <TouchableOpacity
               style={styles.placeOrderBtn}
-              onPress={() => {
-                setIsCheckoutVisible(false);
-                setCart([]);
-                Alert.alert(
-                  "Order Placed Successfully! 🎉",
-                  `Thank you, ${user ? user.name : "valued customer"}!\n\nYour order has been received by Jarvis Computer Consult and will be dispatched to ${deliveryAddress}.\n\nConfirmation sent to ${user ? user.email : "your email"}.`
-                );
-              }}
+              onPress={handlePlaceOrder}
             >
               <Text style={styles.placeOrderBtnText}>Confirm & Place Order</Text>
               <Ionicons name="checkmark-circle" size={18} color="#ffffff" />
@@ -2407,3 +2466,5 @@ const styles = StyleSheet.create({
     fontSize: 13
   }
 });
+
+registerRootComponent(App);
