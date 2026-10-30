@@ -248,6 +248,10 @@
         if (placeOrderText) {
             if (selectedPaymentMode === "paystack") {
                 placeOrderText.textContent = `Pay ${formatMoney(grandTotal)} with Paystack`;
+            } else if (selectedPaymentMode === "momo") {
+                placeOrderText.textContent = `Pay ${formatMoney(grandTotal)} via MoMo Prompt`;
+            } else if (selectedPaymentMode === "card") {
+                placeOrderText.textContent = `Pay ${formatMoney(grandTotal)} with Card`;
             } else if (selectedPaymentMode === "cod") {
                 placeOrderText.textContent = "Confirm Order (Pay on Delivery)";
             } else if (selectedPaymentMode === "bank") {
@@ -295,6 +299,10 @@
                 const totals = calculateTotals();
                 if (selectedPaymentMode === "paystack") {
                     if (placeOrderText) placeOrderText.textContent = `Pay ${formatMoney(totals.grandTotal)} with Paystack`;
+                } else if (selectedPaymentMode === "momo") {
+                    if (placeOrderText) placeOrderText.textContent = `Pay ${formatMoney(totals.grandTotal)} via MoMo Prompt`;
+                } else if (selectedPaymentMode === "card") {
+                    if (placeOrderText) placeOrderText.textContent = `Pay ${formatMoney(totals.grandTotal)} with Card`;
                 } else if (selectedPaymentMode === "cod") {
                     if (placeOrderText) placeOrderText.textContent = "Confirm Order (Pay on Delivery)";
                 } else if (selectedPaymentMode === "bank") {
@@ -745,21 +753,28 @@
     function handlePlaceOrder() {
         if (!validateForm()) return;
 
-        // If Paystack is chosen, launch Paystack Inline Gateway
-        if (selectedPaymentMode === "paystack") {
-            const orderId = generateOrderId();
-            handlePaystackCheckout(orderId);
-            return;
-        }
-
-        // If Mobile Money is chosen, trigger the simulated phone prompt
+        // If Mobile Money is chosen, trigger real Paystack Mobile Money prompt on customer's phone!
         if (selectedPaymentMode === "momo") {
             const orderId = generateOrderId();
-            openMomoPrompt(orderId);
+            handlePaystackCheckout(orderId, ['mobile_money']);
             return;
         }
 
-        // For other methods (Card, Bank, COD)
+        // If Paystack (All) is chosen, launch Paystack with both MoMo and Card
+        if (selectedPaymentMode === "paystack") {
+            const orderId = generateOrderId();
+            handlePaystackCheckout(orderId, ['mobile_money', 'card']);
+            return;
+        }
+
+        // If Card is chosen, launch Paystack with Card
+        if (selectedPaymentMode === "card") {
+            const orderId = generateOrderId();
+            handlePaystackCheckout(orderId, ['card']);
+            return;
+        }
+
+        // For other methods (Bank, COD)
         placeOrderBtn.disabled = true;
         const originalText = placeOrderBtn.innerHTML;
         placeOrderBtn.innerHTML = `
@@ -775,13 +790,15 @@
         }, 1200);
     }
 
-    // Paystack Inline Checkout Handler
-    function handlePaystackCheckout(orderId) {
+    // Paystack Real Checkout & Mobile Money Prompt Handler
+    function handlePaystackCheckout(orderId, allowedChannels) {
         const config = getPaystackConfig();
         const totals = calculateTotals();
         const email = document.getElementById("email").value.trim();
         const name = document.getElementById("fullName").value.trim();
-        const phone = document.getElementById("phone").value.trim();
+        const generalPhone = document.getElementById("phone").value.trim();
+        const momoPhoneInput = document.getElementById("momoPhone");
+        const momoPhone = (momoPhoneInput && momoPhoneInput.value.trim()) ? momoPhoneInput.value.trim() : generalPhone;
         const city = document.getElementById("city").value.trim();
         const region = document.getElementById("region").value;
 
@@ -789,10 +806,11 @@
         const originalBtnHtml = placeOrderBtn.innerHTML;
         placeOrderBtn.innerHTML = `
             <i class="fa-solid fa-spinner fa-spin"></i>
-            <span>Connecting to Paystack Gateway...</span>
+            <span>Sending MoMo Prompt to Handset...</span>
         `;
 
         const amountInPesewas = Math.round(totals.grandTotal * 100);
+        const channels = allowedChannels || ['mobile_money', 'card'];
 
         if (typeof PaystackPop === "undefined") {
             alert("Paystack secure payment gateway could not be loaded. Please ensure you are connected to the internet and try again.");
@@ -808,12 +826,15 @@
                 amount: amountInPesewas,
                 currency: "GHS",
                 ref: orderId,
+                channels: channels,
+                phone: momoPhone || generalPhone,
                 metadata: {
                     custom_fields: [
                         { display_name: "Customer Name", variable_name: "customer_name", value: name },
-                        { display_name: "Phone Number", variable_name: "phone_number", value: phone },
+                        { display_name: "Phone Number", variable_name: "phone_number", value: momoPhone || generalPhone },
                         { display_name: "Delivery City", variable_name: "delivery_city", value: city },
-                        { display_name: "Region", variable_name: "region", value: region }
+                        { display_name: "Region", variable_name: "region", value: region },
+                        { display_name: "Selected MoMo Network", variable_name: "momo_network", value: selectedMoMoNetwork || "MTN MoMo" }
                     ]
                 },
                 callback: function (response) {
@@ -823,7 +844,7 @@
                         gateway: "Paystack",
                         reference: paystackRef,
                         status: "Paid",
-                        label: `Paystack Verified (${config.isLive ? 'Live' : 'Test'} - MoMo/Card)`
+                        label: `Paystack Verified (${channels.includes('mobile_money') ? 'Mobile Money PIN Authorized' : 'Card'})`
                     });
                     placeOrderBtn.disabled = false;
                     placeOrderBtn.innerHTML = originalBtnHtml;
@@ -839,14 +860,14 @@
             console.warn("Paystack popup setup notice:", err);
             // If in test mode and popup requires user confirmation
             if (!config.isLive) {
-                if (confirm("Paystack Test Sandbox: Complete this transaction as a verified Test Order?")) {
+                if (confirm("Paystack Test Sandbox: Complete this transaction as a verified MoMo Test Order?")) {
                     const testRef = `PSTK-TEST-${Math.floor(10000000 + Math.random() * 90000000)}`;
                     playPaymentChime();
                     finalizeOrder(orderId, {
                         gateway: "Paystack",
                         reference: testRef,
                         status: "Paid",
-                        label: "Paystack Sandbox Test (MoMo/Card)"
+                        label: "Paystack Sandbox (MoMo PIN Verified)"
                     });
                 }
             } else {
