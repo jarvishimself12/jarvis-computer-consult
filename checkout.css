@@ -107,12 +107,22 @@ body {
     display: flex;
     align-items: center;
     gap: 10px;
-    background: #f1edff;
-    color: var(--primary-dark);
+    background: #fee2e2;
+    color: #dc2626;
+    border: 1.5px solid #fca5a5;
     padding: 8px 16px;
     border-radius: 30px;
     font-size: 13px;
     font-weight: 600;
+}
+
+.header-trust i {
+    color: #dc2626;
+}
+
+.header-trust span {
+    color: #b91c1c;
+    font-weight: 700;
 }
 
 .header-actions {
@@ -1061,7 +1071,7 @@ body {
 
 .guarantee-badge i {
     font-size: 16px;
-    color: var(--primary);
+    color: #dc2626;
 }
 
 /* EMPTY CART STATE */

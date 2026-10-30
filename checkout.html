@@ -18,8 +18,42 @@
     <script src="https://js.paystack.co/v1/inline.js"></script>
 
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="checkout.css">
+    <link rel="stylesheet" href="checkout.css?v=20261030e">
     <link rel="stylesheet" href="assistance.css">
+
+    <!-- CRITICAL RED SHAPES FOR CHECKOUT -->
+    <style>
+        .btn-place-order {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important;
+            color: #ffffff !important;
+            box-shadow: 0 8px 24px rgba(220, 38, 38, 0.45) !important;
+            border: none !important;
+            border-radius: 8px !important;
+        }
+        .btn-place-order:hover {
+            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%) !important;
+            box-shadow: 0 12px 30px rgba(220, 38, 38, 0.6) !important;
+        }
+        .btn-place-order i,
+        .btn-place-order span {
+            color: #ffffff !important;
+        }
+        .header-trust {
+            background: #fee2e2 !important;
+            color: #dc2626 !important;
+            border: 1.5px solid #fca5a5 !important;
+        }
+        .header-trust i {
+            color: #dc2626 !important;
+        }
+        .header-trust span {
+            color: #b91c1c !important;
+            font-weight: 700 !important;
+        }
+        .guarantee-badge i {
+            color: #dc2626 !important;
+        }
+    </style>
 </head>
 
 <body>
@@ -37,9 +71,9 @@
                 </div>
             </a>
 
-            <div class="header-trust">
-                <i class="fa-solid fa-shield-halved"></i>
-                <span>256-Bit SSL Encrypted Checkout</span>
+            <div class="header-trust" style="display: flex !important; align-items: center !important; gap: 10px !important; background: #fee2e2 !important; color: #dc2626 !important; border: 1.5px solid #fca5a5 !important; padding: 8px 16px !important; border-radius: 30px !important; font-size: 13px !important; font-weight: 600 !important;">
+                <i class="fa-solid fa-shield-halved" style="color: #dc2626 !important;"></i>
+                <span style="color: #b91c1c !important; font-weight: 700 !important;">256-Bit SSL Encrypted Checkout</span>
             </div>
 
             <div class="header-actions">
@@ -454,22 +488,22 @@
                         </div>
 
                         <!-- CTA BUTTON -->
-                        <button type="button" id="placeOrderBtn" class="btn-place-order">
-                            <i class="fa-solid fa-lock"></i>
-                            <span id="placeOrderText">Place Order & Pay</span>
+                        <button type="button" id="placeOrderBtn" class="btn-place-order" style="display: flex !important; align-items: center !important; justify-content: center !important; gap: 10px !important; width: 100% !important; padding: 16px !important; background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important; color: #ffffff !important; border: none !important; border-radius: 8px !important; font-size: 16px !important; font-weight: 700 !important; cursor: pointer !important; box-shadow: 0 8px 24px rgba(220, 38, 38, 0.45) !important;">
+                            <i class="fa-solid fa-lock" style="color: #ffffff !important;"></i>
+                            <span id="placeOrderText" style="color: #ffffff !important; font-weight: 700 !important;">Place Order & Pay</span>
                         </button>
 
                         <div class="order-guarantee-badges">
                             <div class="guarantee-badge">
-                                <i class="fa-solid fa-certificate"></i>
+                                <i class="fa-solid fa-certificate" style="color: #dc2626 !important;"></i>
                                 <span>100% Genuine</span>
                             </div>
                             <div class="guarantee-badge">
-                                <i class="fa-solid fa-rotate-left"></i>
+                                <i class="fa-solid fa-rotate-left" style="color: #dc2626 !important;"></i>
                                 <span>Easy Returns</span>
                             </div>
                             <div class="guarantee-badge">
-                                <i class="fa-solid fa-headset"></i>
+                                <i class="fa-solid fa-headset" style="color: #dc2626 !important;"></i>
                                 <span>24/7 Support</span>
                             </div>
                         </div>

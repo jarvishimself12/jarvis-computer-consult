@@ -31,8 +31,50 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
     <!-- Homepage CSS -->
-    <link rel="stylesheet" href="./home.css">
+    <link rel="stylesheet" href="./home.css?v=20261030e">
     <link rel="stylesheet" href="./assistance.css">
+
+    <!-- CRITICAL RED SHAPE ADMIN TAB STYLES -->
+    <style>
+        .nav-links a.nav-admin-red-btn,
+        .nav-admin-red-btn {
+            display: inline-flex !important;
+            align-items: center !important;
+            gap: 7px !important;
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important;
+            color: #ffffff !important;
+            font-size: 13px !important;
+            font-weight: 700 !important;
+            padding: 7px 18px !important;
+            border-radius: 20px !important;
+            border: 1.5px solid #f87171 !important;
+            box-shadow: 0 4px 14px rgba(220, 38, 38, 0.45) !important;
+            text-decoration: none !important;
+            cursor: pointer !important;
+            margin-left: 8px !important;
+            transition: all 0.25s ease !important;
+        }
+        .nav-links a.nav-admin-red-btn i,
+        .nav-admin-red-btn i {
+            color: #ffffff !important;
+            font-size: 13px !important;
+        }
+        .nav-links a.nav-admin-red-btn span,
+        .nav-admin-red-btn span {
+            color: #ffffff !important;
+            font-weight: 700 !important;
+        }
+        .nav-links a.nav-admin-red-btn:hover,
+        .nav-admin-red-btn:hover {
+            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%) !important;
+            color: #ffffff !important;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(220, 38, 38, 0.6) !important;
+        }
+        .nav-links a.nav-admin-red-btn::after {
+            display: none !important;
+        }
+    </style>
 </head>
 
 <body>
@@ -156,9 +198,9 @@
                     About Us
                 </a>
 
-                <a href="admin/index.html" class="nav-admin-red-btn" title="Open Admin Portal">
-                    <i class="fa-solid fa-shield-halved"></i>
-                    <span>Admin</span>
+                <a href="admin/index.html" class="nav-admin-red-btn" title="Open Admin Portal" style="display: inline-flex !important; align-items: center !important; gap: 7px !important; background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important; color: #ffffff !important; font-size: 13px !important; font-weight: 700 !important; padding: 7px 18px !important; border-radius: 20px !important; border: 1.5px solid #f87171 !important; box-shadow: 0 4px 14px rgba(220, 38, 38, 0.45) !important; text-decoration: none !important; cursor: pointer !important; margin-left: 8px !important;">
+                    <i class="fa-solid fa-shield-halved" style="color: #ffffff !important; font-size: 12px !important;"></i>
+                    <span style="color: #ffffff !important; font-weight: 700 !important;">Admin</span>
                 </a>
 
             </div>
