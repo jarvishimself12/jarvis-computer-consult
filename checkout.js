@@ -54,7 +54,7 @@
 
     // Paystack Configuration Management
     const DEFAULT_PAYSTACK_CONFIG = {
-        publicKey: "pk_test_d3a86c4f09a84d4399e829f0183b194a28938d21",
+        publicKey: "pk_test_5806e07e8c16fd0f192d605125df694ac8705096",
         isLive: false,
         currency: "GHS",
         businessName: "Jarvis Computer Consult"
@@ -63,7 +63,9 @@
     function getPaystackConfig() {
         try {
             const stored = JSON.parse(localStorage.getItem("paystack_config"));
-            if (stored && stored.publicKey) return stored;
+            if (stored && stored.publicKey && !stored.publicKey.includes("d3a86c4f09a84d4399e829f0183b194a28938d21")) {
+                return stored;
+            }
         } catch (e) {}
         return { ...DEFAULT_PAYSTACK_CONFIG };
     }
