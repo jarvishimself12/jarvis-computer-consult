@@ -4,21 +4,21 @@
 ============================================================== */
 
 :root {
-    --primary: #65a30d;
-    --primary-dark: #4d7c0f;
-    --primary-light: #f7fee7;
-    --primary-border: #bef264;
-    --primary-glow: rgba(132, 204, 22, 0.22);
+    --primary: #16a34a;
+    --primary-dark: #15803d;
+    --primary-light: #f0fdf4;
+    --primary-border: #86efac;
+    --primary-glow: rgba(22, 163, 74, 0.22);
 
     --bg-body: #f8fafc;
     --bg-surface: #ffffff;
     --bg-card: #ffffff;
     --bg-subtle: #f1f5f9;
-    --bg-hover: #f7fee7;
+    --bg-hover: #f0fdf4;
 
     --border: #e2e8f0;
     --border-light: #edf2f7;
-    --border-focus: #84cc16;
+    --border-focus: #16a34a;
 
     --text-main: #0f172a;
     --text-body: #334155;

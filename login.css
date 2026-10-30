@@ -198,8 +198,8 @@ body {
 }
 
 .demo-access-pill:hover {
-    background: #ecfccb;
-    border-color: #76c800;
+    background: #dcfce7;
+    border-color: #16a34a;
     transform: translateY(-1px);
 }
 
@@ -494,7 +494,7 @@ body {
     height: 52px;
     border: none;
     border-radius: 12px;
-    background: linear-gradient(135deg, #76c800 0%, #5e9900 100%);
+    background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
     color: #ffffff;
     font-family: inherit;
     font-size: 15px;
@@ -504,16 +504,16 @@ body {
     justify-content: center;
     align-items: center;
     gap: 10px;
-    box-shadow: 0 8px 24px -4px var(--primary-glow);
+    box-shadow: 0 8px 24px -4px rgba(22, 163, 74, 0.4);
     transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
     position: relative;
     overflow: hidden;
 }
 
 .main-button:hover {
-    background: linear-gradient(135deg, #65a30d 0%, #4d7c0f 100%);
+    background: linear-gradient(135deg, #15803d 0%, #166534 100%);
     transform: translateY(-1.5px);
-    box-shadow: 0 12px 28px -4px rgba(118, 200, 0, 0.45);
+    box-shadow: 0 12px 28px -4px rgba(22, 163, 74, 0.5);
 }
 
 .main-button:active {
@@ -610,9 +610,9 @@ body {
 }
 
 .guest-button:hover {
-    background: #f7fee7;
-    border-color: #76c800;
-    color: #365314;
+    background: #f0fdf4;
+    border-color: #16a34a;
+    color: #166534;
     transform: translateY(-1px);
 }
 
@@ -885,7 +885,7 @@ body {
     width: 42px;
     height: 42px;
     border-radius: 50%;
-    background: linear-gradient(135deg, #76c800 0%, #3f6212 100%);
+    background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
     color: #ffffff;
     display: flex;
     align-items: center;
@@ -893,7 +893,7 @@ body {
     font-size: 16px;
     font-weight: 700;
     flex-shrink: 0;
-    box-shadow: 0 4px 12px rgba(118, 200, 0, 0.3);
+    box-shadow: 0 4px 12px rgba(22, 163, 74, 0.35);
     position: relative;
 }
 
