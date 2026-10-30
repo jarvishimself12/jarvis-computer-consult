@@ -755,13 +755,7 @@
             cloudEventSource = new EventSource(`https://ntfy.sh/${CLOUD_SYNC_TOPIC}/sse`);
 
             cloudEventSource.onopen = function () {
-                const connPill = document.querySelector(".store-connection-pill");
-                if (connPill) {
-                    connPill.innerHTML = `
-                        <span class="pulse-led" style="background:#22c55e;box-shadow:0 0 10px #22c55e;"></span>
-                        <span>Live Cloud Sync Active (Phone & Laptop Connected)</span>
-                    `;
-                }
+                // Real-time cloud stream connected
             };
 
             cloudEventSource.onmessage = function (event) {

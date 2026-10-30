@@ -4,21 +4,21 @@
 ============================================================== */
 
 :root {
-    --primary: #6c4df6;
-    --primary-dark: #5838df;
-    --primary-light: #f3f0ff;
-    --primary-border: #ddd6fe;
-    --primary-glow: rgba(108, 77, 246, 0.18);
+    --primary: #65a30d;
+    --primary-dark: #4d7c0f;
+    --primary-light: #f7fee7;
+    --primary-border: #bef264;
+    --primary-glow: rgba(132, 204, 22, 0.22);
 
     --bg-body: #f8fafc;
     --bg-surface: #ffffff;
     --bg-card: #ffffff;
     --bg-subtle: #f1f5f9;
-    --bg-hover: #f9f8ff;
+    --bg-hover: #f7fee7;
 
     --border: #e2e8f0;
     --border-light: #edf2f7;
-    --border-focus: #6c4df6;
+    --border-focus: #84cc16;
 
     --text-main: #0f172a;
     --text-body: #334155;
@@ -73,7 +73,7 @@ body {
 .auth-lock-overlay {
     position: fixed;
     inset: 0;
-    background: radial-gradient(circle at top right, #ede9fe 0%, #f8fafc 65%);
+    background: radial-gradient(circle at top right, #ecfccb 0%, #f8fafc 65%);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -87,7 +87,7 @@ body {
     border-radius: 20px;
     width: min(440px, 100%);
     padding: 42px 34px;
-    box-shadow: 0 20px 45px rgba(108, 77, 246, 0.1), var(--shadow-md);
+    box-shadow: 0 20px 45px rgba(132, 204, 22, 0.15), var(--shadow-md);
     text-align: center;
     animation: zoomIn 0.3s ease;
 }
@@ -97,18 +97,25 @@ body {
     to { transform: scale(1); opacity: 1; }
 }
 
-.lock-shield-icon {
-    width: 68px;
-    height: 68px;
-    border-radius: 50%;
-    background: var(--primary-light);
-    border: 1.5px solid var(--primary-border);
-    color: var(--primary);
-    display: inline-flex;
+.lock-brand-logo {
+    display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 28px;
-    margin-bottom: 20px;
+    margin-bottom: 22px;
+}
+
+.admin-lock-logo {
+    height: 60px;
+    width: auto;
+    max-width: 200px;
+    object-fit: contain;
+    display: block;
+    filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.08));
+    transition: transform 0.25s ease;
+}
+
+.admin-lock-logo:hover {
+    transform: scale(1.03);
 }
 
 .auth-lock-card h2 {
@@ -462,7 +469,7 @@ body {
 }
 
 .dash-badge {
-    background: #ede9fe;
+    background: #ecfccb;
     color: var(--primary);
     padding: 2px 8px;
     border-radius: 12px;
@@ -643,7 +650,7 @@ body {
 
 .pill-status.paid { background: var(--success-bg); color: var(--success-text); border: 1px solid var(--success-border); }
 .pill-status.pending { background: var(--warning-bg); color: var(--warning-text); border: 1px solid var(--warning-border); }
-.pill-status.processing { background: #ede9fe; color: #5b21b6; border: 1px solid var(--primary-border); }
+.pill-status.processing { background: #ecfccb; color: #365314; border: 1px solid var(--primary-border); }
 .pill-status.shipped { background: #e0f2fe; color: #0369a1; border: 1px solid #bae6fd; }
 .pill-status.delivered { background: var(--success-bg); color: var(--success-text); border: 1px solid var(--success-border); }
 .pill-status.cancelled { background: var(--danger-bg); color: var(--danger-text); border: 1px solid var(--danger-border); }
