@@ -1013,7 +1013,7 @@ body {
 .btn-place-order {
     width: 100%;
     padding: 16px;
-    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
     color: var(--white);
     border: none;
     border-radius: var(--radius-sm);
@@ -1024,13 +1024,14 @@ body {
     justify-content: center;
     gap: 10px;
     cursor: pointer;
-    box-shadow: 0 8px 24px rgba(118, 200, 0, 0.35);
+    box-shadow: 0 8px 24px rgba(220, 38, 38, 0.4);
     transition: var(--transition);
 }
 
 .btn-place-order:hover {
+    background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
     transform: translateY(-2px);
-    box-shadow: 0 12px 30px rgba(118, 200, 0, 0.45);
+    box-shadow: 0 12px 30px rgba(220, 38, 38, 0.55);
 }
 
 .btn-place-order:disabled {
