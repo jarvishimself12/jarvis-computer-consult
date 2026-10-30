@@ -14,6 +14,9 @@
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
+    <!-- Paystack Inline SDK -->
+    <script src="https://js.paystack.co/v1/inline.js"></script>
+
     <!-- Custom CSS -->
     <link rel="stylesheet" href="checkout.css">
     <link rel="stylesheet" href="assistance.css">
@@ -213,7 +216,13 @@
 
                         <!-- PAYMENT TABS -->
                         <div class="payment-tabs">
-                            <button type="button" class="payment-tab-btn active" data-mode="momo">
+                            <button type="button" class="payment-tab-btn paystack-tab active" data-mode="paystack">
+                                <div class="tab-paystack-brand">
+                                    <img src="images/paystack.svg" alt="Paystack" class="tab-paystack-logo">
+                                </div>
+                                <span class="paystack-tag-pill">Instant MoMo & Card</span>
+                            </button>
+                            <button type="button" class="payment-tab-btn" data-mode="momo">
                                 <i class="fa-solid fa-mobile-screen-button"></i>
                                 <span>Mobile Money</span>
                             </button>
@@ -234,8 +243,57 @@
                             </button>
                         </div>
 
+                        <!-- PANE 0: PAYSTACK (INSTANT MOMO & CARDS IN GH₵) -->
+                        <div id="pane-paystack" class="payment-pane active">
+                            <div class="paystack-banner-card">
+                                <div class="paystack-banner-top">
+                                    <div class="paystack-banner-brand">
+                                        <img src="images/paystack.svg" alt="Paystack" class="paystack-banner-logo">
+                                        <span class="paystack-official-badge"><i class="fa-solid fa-circle-check"></i> Official Payment Gateway</span>
+                                    </div>
+                                    <div class="paystack-mode-badge" id="paystackModeIndicator">
+                                        <span class="mode-pulse"></span>
+                                        <span id="paystackModeText">Test Mode Active</span>
+                                    </div>
+                                </div>
+
+                                <p class="paystack-desc">
+                                    Pay securely and directly in <strong>Ghana Cedis (GH₵)</strong> with <strong>Mobile Money (MTN MoMo, Telecel Cash, AT Money)</strong> or <strong>Bank Card (Visa, Mastercard)</strong> via Paystack's encrypted checkout popup.
+                                </p>
+
+                                <div class="paystack-channels-grid">
+                                    <div class="ps-channel-item">
+                                        <div class="ps-channel-icon"><i class="fa-solid fa-mobile-screen-button"></i></div>
+                                        <div class="ps-channel-info">
+                                            <strong>Mobile Money</strong>
+                                            <span>MTN MoMo, Telecel & AT Money</span>
+                                        </div>
+                                    </div>
+                                    <div class="ps-channel-item">
+                                        <div class="ps-channel-icon"><i class="fa-solid fa-credit-card"></i></div>
+                                        <div class="ps-channel-info">
+                                            <strong>Visa & Mastercard</strong>
+                                            <span>Local & International Cards</span>
+                                        </div>
+                                    </div>
+                                    <div class="ps-channel-item">
+                                        <div class="ps-channel-icon"><i class="fa-solid fa-bolt"></i></div>
+                                        <div class="ps-channel-info">
+                                            <strong>Instant Dispatch</strong>
+                                            <span>Orders confirmed automatically</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="paystack-security-footer">
+                                    <i class="fa-solid fa-shield-halved"></i>
+                                    <span>PCI-DSS Level 1 Certified &bull; 256-Bit SSL Encryption &bull; Regulated by Bank of Ghana</span>
+                                </div>
+                            </div>
+                        </div>
+
                         <!-- PANE 1: MOBILE MONEY (MOMO) -->
-                        <div id="pane-momo" class="payment-pane active">
+                        <div id="pane-momo" class="payment-pane">
                             <label style="font-size: 13px; font-weight: 700; display: block; margin-bottom: 10px;">Select Mobile Money Network:</label>
                             <div class="momo-network-selector">
                                 <div class="network-badge mtn selected" data-network="MTN MoMo">
@@ -618,6 +676,10 @@
                 <div class="receipt-row">
                     <span style="color: var(--muted);">Payment Status:</span>
                     <strong id="receiptPaymentStatus" style="color: var(--success);">PAID</strong>
+                </div>
+                <div class="receipt-row" id="receiptPaystackRefRow" style="display: none;">
+                    <span style="color: var(--muted);">Paystack Reference:</span>
+                    <strong id="receiptPaystackRef" style="color: #0ba4db; font-family: monospace; font-size: 13px;">-</strong>
                 </div>
                 <div class="receipt-row" style="border-top: 1px dashed #d1cbe5; margin-top: 8px; padding-top: 8px;">
                     <span style="font-weight: 700; color: var(--dark);">Total Amount Paid:</span>

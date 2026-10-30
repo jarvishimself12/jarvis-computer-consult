@@ -387,7 +387,7 @@ body {
 /* PAYMENT MODES */
 .payment-tabs {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
     gap: 10px;
     margin-bottom: 24px;
 }
@@ -403,8 +403,10 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     gap: 8px;
     color: var(--muted);
+    min-height: 82px;
 }
 
 .payment-tab-btn i {
@@ -426,6 +428,200 @@ body {
     border-color: var(--primary);
     background: var(--primary-light);
     color: var(--primary-dark);
+}
+
+/* PAYSTACK TAB SPECIFIC */
+.payment-tab-btn.paystack-tab {
+    position: relative;
+    border-color: #0ba4db;
+    background: linear-gradient(135deg, #ffffff 0%, #f0f9ff 100%);
+}
+
+.payment-tab-btn.paystack-tab:hover {
+    border-color: #0284c7;
+    background: #e0f2fe;
+    box-shadow: 0 4px 14px rgba(11, 164, 219, 0.18);
+}
+
+.payment-tab-btn.paystack-tab.active {
+    border-color: #0ba4db;
+    background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%);
+    box-shadow: 0 4px 18px rgba(11, 164, 219, 0.28);
+}
+
+.tab-paystack-brand {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 24px;
+}
+
+.tab-paystack-logo {
+    height: 22px;
+    width: auto;
+    object-fit: contain;
+    border-radius: 4px;
+}
+
+.paystack-tag-pill {
+    font-size: 10.5px !important;
+    font-weight: 800 !important;
+    color: #0369a1 !important;
+    letter-spacing: 0.2px;
+}
+
+/* PAYSTACK BANNER CARD */
+.paystack-banner-card {
+    background: linear-gradient(145deg, #ffffff 0%, #f0f9ff 55%, #e0f2fe 100%);
+    border: 1.5px solid #7dd3fc;
+    border-radius: var(--radius-md);
+    padding: 24px;
+    box-shadow: 0 10px 25px rgba(11, 164, 219, 0.08);
+}
+
+.paystack-banner-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid rgba(11, 164, 219, 0.15);
+}
+
+.paystack-banner-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.paystack-banner-logo {
+    height: 28px;
+    width: auto;
+    border-radius: 6px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.paystack-official-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: #0284c7;
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 20px;
+    letter-spacing: 0.3px;
+}
+
+.paystack-mode-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #fef3c7;
+    border: 1px solid #fde68a;
+    color: #92400e;
+    font-size: 11.5px;
+    font-weight: 700;
+    padding: 4px 12px;
+    border-radius: 20px;
+}
+
+.paystack-mode-badge.live-mode {
+    background: #dcfce7;
+    border-color: #bbf7d0;
+    color: #166534;
+}
+
+.mode-pulse {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #f59e0b;
+    box-shadow: 0 0 6px #f59e0b;
+    animation: ledPulse 1.6s infinite;
+}
+
+.paystack-mode-badge.live-mode .mode-pulse {
+    background: #22c55e;
+    box-shadow: 0 0 6px #22c55e;
+}
+
+.paystack-desc {
+    font-size: 13.5px;
+    color: #1e293b;
+    line-height: 1.6;
+    margin-bottom: 18px;
+}
+
+.paystack-channels-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.ps-channel-item {
+    background: #ffffff;
+    border: 1px solid #bae6fd;
+    border-radius: var(--radius-sm);
+    padding: 12px 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: var(--transition);
+}
+
+.ps-channel-item:hover {
+    border-color: #0ba4db;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(11, 164, 219, 0.12);
+}
+
+.ps-channel-icon {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    background: #e0f2fe;
+    color: #0284c7;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 17px;
+    flex-shrink: 0;
+}
+
+.ps-channel-info strong {
+    display: block;
+    font-size: 13px;
+    font-weight: 700;
+    color: #0f172a;
+    margin-bottom: 2px;
+}
+
+.ps-channel-info span {
+    display: block;
+    font-size: 11.5px;
+    color: #64748b;
+}
+
+.paystack-security-footer {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11.5px;
+    color: #475569;
+    background: rgba(255, 255, 255, 0.7);
+    padding: 10px 14px;
+    border-radius: 8px;
+    border: 1px solid #e0f2fe;
+}
+
+.paystack-security-footer i {
+    color: #0ba4db;
+    font-size: 13px;
 }
 
 .payment-pane {

@@ -19,7 +19,7 @@
     let deliveryCost = 35;
     let appliedDiscount = 0;
     let appliedDiscountCode = "";
-    let selectedPaymentMode = "momo";
+    let selectedPaymentMode = "paystack";
     let selectedMoMoNetwork = "MTN MoMo";
 
     // DOM Elements
@@ -35,6 +35,12 @@
     const placeOrderBtn = document.getElementById("placeOrderBtn");
     const placeOrderText = document.getElementById("placeOrderText");
 
+    // Paystack Elements
+    const paystackModeIndicator = document.getElementById("paystackModeIndicator");
+    const paystackModeText = document.getElementById("paystackModeText");
+    const receiptPaystackRefRow = document.getElementById("receiptPaystackRefRow");
+    const receiptPaystackRef = document.getElementById("receiptPaystackRef");
+
     // Modal Elements
     const orderSuccessModal = document.getElementById("orderSuccessModal");
     const receiptOrderId = document.getElementById("receiptOrderId");
@@ -45,6 +51,35 @@
     const receiptPaymentStatus = document.getElementById("receiptPaymentStatus");
     const receiptTotal = document.getElementById("receiptTotal");
     const printReceiptBtn = document.getElementById("printReceiptBtn");
+
+    // Paystack Configuration Management
+    const DEFAULT_PAYSTACK_CONFIG = {
+        publicKey: "pk_test_d3a86c4f09a84d4399e829f0183b194a28938d21",
+        isLive: false,
+        currency: "GHS",
+        businessName: "Jarvis Computer Consult"
+    };
+
+    function getPaystackConfig() {
+        try {
+            const stored = JSON.parse(localStorage.getItem("paystack_config"));
+            if (stored && stored.publicKey) return stored;
+        } catch (e) {}
+        return { ...DEFAULT_PAYSTACK_CONFIG };
+    }
+
+    function syncPaystackUI() {
+        const config = getPaystackConfig();
+        if (paystackModeIndicator && paystackModeText) {
+            if (config.isLive) {
+                paystackModeIndicator.classList.add("live-mode");
+                paystackModeText.textContent = "Live Mode Active";
+            } else {
+                paystackModeIndicator.classList.remove("live-mode");
+                paystackModeText.textContent = "Test Sandbox Active";
+            }
+        }
+    }
 
     // MoMo Handset Prompt Elements
     const momoPromptModal = document.getElementById("momoPromptModal");
@@ -125,6 +160,7 @@
         // Render Cart Items & Calculate
         renderOrderItems();
         setupEventListeners();
+        syncPaystackUI();
         calculateTotals();
     }
 
@@ -210,7 +246,15 @@
 
         if (summaryTotal) summaryTotal.textContent = formatMoney(grandTotal);
         if (placeOrderText) {
-            placeOrderText.textContent = `Place Order & Pay ${formatMoney(grandTotal)}`;
+            if (selectedPaymentMode === "paystack") {
+                placeOrderText.textContent = `Pay ${formatMoney(grandTotal)} with Paystack`;
+            } else if (selectedPaymentMode === "cod") {
+                placeOrderText.textContent = "Confirm Order (Pay on Delivery)";
+            } else if (selectedPaymentMode === "bank") {
+                placeOrderText.textContent = "Place Order & View Bank Instructions";
+            } else {
+                placeOrderText.textContent = `Place Order & Pay ${formatMoney(grandTotal)}`;
+            }
         }
 
         return { subtotal, deliveryCost, appliedDiscount, grandTotal };
@@ -248,12 +292,14 @@
                 if (targetPane) targetPane.classList.add("active");
 
                 // Update CTA button text based on mode
-                if (selectedPaymentMode === "cod") {
+                const totals = calculateTotals();
+                if (selectedPaymentMode === "paystack") {
+                    if (placeOrderText) placeOrderText.textContent = `Pay ${formatMoney(totals.grandTotal)} with Paystack`;
+                } else if (selectedPaymentMode === "cod") {
                     if (placeOrderText) placeOrderText.textContent = "Confirm Order (Pay on Delivery)";
                 } else if (selectedPaymentMode === "bank") {
                     if (placeOrderText) placeOrderText.textContent = "Place Order & View Bank Instructions";
                 } else {
-                    const totals = calculateTotals();
                     if (placeOrderText) placeOrderText.textContent = `Place Order & Pay ${formatMoney(totals.grandTotal)}`;
                 }
             });
@@ -699,6 +745,13 @@
     function handlePlaceOrder() {
         if (!validateForm()) return;
 
+        // If Paystack is chosen, launch Paystack Inline Gateway
+        if (selectedPaymentMode === "paystack") {
+            const orderId = generateOrderId();
+            handlePaystackCheckout(orderId);
+            return;
+        }
+
         // If Mobile Money is chosen, trigger the simulated phone prompt
         if (selectedPaymentMode === "momo") {
             const orderId = generateOrderId();
@@ -722,8 +775,90 @@
         }, 1200);
     }
 
+    // Paystack Inline Checkout Handler
+    function handlePaystackCheckout(orderId) {
+        const config = getPaystackConfig();
+        const totals = calculateTotals();
+        const email = document.getElementById("email").value.trim();
+        const name = document.getElementById("fullName").value.trim();
+        const phone = document.getElementById("phone").value.trim();
+        const city = document.getElementById("city").value.trim();
+        const region = document.getElementById("region").value;
+
+        placeOrderBtn.disabled = true;
+        const originalBtnHtml = placeOrderBtn.innerHTML;
+        placeOrderBtn.innerHTML = `
+            <i class="fa-solid fa-spinner fa-spin"></i>
+            <span>Connecting to Paystack Gateway...</span>
+        `;
+
+        const amountInPesewas = Math.round(totals.grandTotal * 100);
+
+        if (typeof PaystackPop === "undefined") {
+            alert("Paystack secure payment gateway could not be loaded. Please ensure you are connected to the internet and try again.");
+            placeOrderBtn.disabled = false;
+            placeOrderBtn.innerHTML = originalBtnHtml;
+            return;
+        }
+
+        try {
+            const handler = PaystackPop.setup({
+                key: config.publicKey,
+                email: email,
+                amount: amountInPesewas,
+                currency: "GHS",
+                ref: orderId,
+                metadata: {
+                    custom_fields: [
+                        { display_name: "Customer Name", variable_name: "customer_name", value: name },
+                        { display_name: "Phone Number", variable_name: "phone_number", value: phone },
+                        { display_name: "Delivery City", variable_name: "delivery_city", value: city },
+                        { display_name: "Region", variable_name: "region", value: region }
+                    ]
+                },
+                callback: function (response) {
+                    const paystackRef = response.reference || response.trxref || orderId;
+                    playPaymentChime();
+                    finalizeOrder(orderId, {
+                        gateway: "Paystack",
+                        reference: paystackRef,
+                        status: "Paid",
+                        label: `Paystack Verified (${config.isLive ? 'Live' : 'Test'} - MoMo/Card)`
+                    });
+                    placeOrderBtn.disabled = false;
+                    placeOrderBtn.innerHTML = originalBtnHtml;
+                },
+                onClose: function () {
+                    placeOrderBtn.disabled = false;
+                    placeOrderBtn.innerHTML = originalBtnHtml;
+                }
+            });
+
+            handler.openIframe();
+        } catch (err) {
+            console.warn("Paystack popup setup notice:", err);
+            // If in test mode and popup requires user confirmation
+            if (!config.isLive) {
+                if (confirm("Paystack Test Sandbox: Complete this transaction as a verified Test Order?")) {
+                    const testRef = `PSTK-TEST-${Math.floor(10000000 + Math.random() * 90000000)}`;
+                    playPaymentChime();
+                    finalizeOrder(orderId, {
+                        gateway: "Paystack",
+                        reference: testRef,
+                        status: "Paid",
+                        label: "Paystack Sandbox Test (MoMo/Card)"
+                    });
+                }
+            } else {
+                alert("Paystack encountered an issue opening the checkout popup. Please verify your Live Public Key in the Admin Portal.");
+            }
+            placeOrderBtn.disabled = false;
+            placeOrderBtn.innerHTML = originalBtnHtml;
+        }
+    }
+
     // Finalize order record and store
-    function finalizeOrder(customOrderId) {
+    function finalizeOrder(customOrderId, paymentMeta) {
         const orderId = customOrderId || generateOrderId();
         const totals = calculateTotals();
 
@@ -739,8 +874,13 @@
 
         let paymentLabel = "";
         let paymentStatus = "Paid";
+        let paystackRef = null;
 
-        if (selectedPaymentMode === "momo") {
+        if (paymentMeta && paymentMeta.gateway === "Paystack") {
+            paymentLabel = paymentMeta.label || "Paystack (MoMo & Card)";
+            paymentStatus = paymentMeta.status || "Paid";
+            paystackRef = paymentMeta.reference;
+        } else if (selectedPaymentMode === "momo") {
             const momoPhone = document.getElementById("momoPhone").value.trim();
             paymentLabel = `Mobile Money (${selectedMoMoNetwork} - ${momoPhone})`;
             paymentStatus = "Paid";
@@ -758,6 +898,7 @@
 
         const newOrder = {
             id: orderId,
+            paystackReference: paystackRef,
             createdAt: new Date().toISOString(),
             dateFormatted: new Date().toLocaleDateString("en-GB", {
                 day: "numeric",
@@ -844,6 +985,16 @@
                 receiptPaymentStatus.style.color = "var(--warning)";
             }
         }
+
+        if (receiptPaystackRefRow && receiptPaystackRef) {
+            if (order.paystackReference) {
+                receiptPaystackRefRow.style.display = "flex";
+                receiptPaystackRef.textContent = order.paystackReference;
+            } else {
+                receiptPaystackRefRow.style.display = "none";
+            }
+        }
+
         if (receiptTotal) receiptTotal.textContent = formatMoney(order.total);
 
         orderSuccessModal.classList.add("active");

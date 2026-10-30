@@ -74,6 +74,10 @@
                     <i class="fa-solid fa-plus-circle"></i>
                     Simulate Order
                 </button>
+                <button type="button" class="btn-topbar btn-paystack-config" id="btnPaystackConfig" title="Configure Paystack Payment Gateway">
+                    <img src="../images/paystack.svg" alt="Paystack" style="height: 16px; width: auto; vertical-align: middle; border-radius: 3px;">
+                    <span>Paystack Gateway</span>
+                </button>
                 <a href="../home.html" target="_blank" class="btn-topbar" title="Open public storefront in a new tab">
                     <i class="fa-solid fa-arrow-up-right-from-square"></i>
                     Visit Store
@@ -293,7 +297,8 @@
                 <div>
                     <strong>Payment Information:</strong>
                     <span id="modalPaymentMethod">Method: ---</span><br>
-                    <span>Status: <strong id="modalPaymentStatus" class="pill-status paid">PAID</strong></span>
+                    <span>Status: <strong id="modalPaymentStatus" class="pill-status paid">PAID</strong></span><br>
+                    <span id="modalPaystackRef" style="display: none; font-size: 11.5px; color: #0284c7; font-family: monospace; font-weight: 700; margin-top: 4px;">Paystack Ref: ---</span>
                 </div>
                 <div>
                     <strong>Shipping & Fulfillment:</strong>
@@ -359,6 +364,107 @@
                     </button>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <!-- ==============================================================
+         PAYSTACK PAYMENT GATEWAY CONFIGURATION MODAL
+    ============================================================== -->
+    <div id="paystackSettingsModal" class="admin-modal-backdrop">
+        <div class="admin-modal-card paystack-modal-card">
+            <div class="admin-modal-header paystack-modal-header">
+                <div class="paystack-header-left">
+                    <img src="../images/paystack.svg" alt="Paystack" class="modal-paystack-logo">
+                    <div>
+                        <h2>Paystack Payment Gateway Settings</h2>
+                        <p class="modal-subtitle">Configure live or test API keys for Mobile Money & Card checkout</p>
+                    </div>
+                </div>
+                <button type="button" class="btn-close-modal" id="closePaystackModalBtn">&times;</button>
+            </div>
+
+            <form id="paystackSettingsForm" class="paystack-settings-body">
+                <!-- Mode Selector: Test vs Live -->
+                <div class="config-field-group">
+                    <label>Environment Mode</label>
+                    <div class="paystack-mode-toggle-group">
+                        <label class="mode-toggle-card selected" id="labelTestMode">
+                            <input type="radio" name="paystackEnv" value="test" checked>
+                            <div class="mode-toggle-icon"><i class="fa-solid fa-flask"></i></div>
+                            <div>
+                                <strong>Test Sandbox Mode</strong>
+                                <span>Simulate payments using test MoMo & cards</span>
+                            </div>
+                        </label>
+                        <label class="mode-toggle-card" id="labelLiveMode">
+                            <input type="radio" name="paystackEnv" value="live">
+                            <div class="mode-toggle-icon live"><i class="fa-solid fa-circle-check"></i></div>
+                            <div>
+                                <strong>Live Production Mode</strong>
+                                <span>Accept real customer payments in GH₵</span>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Public Key Input -->
+                <div class="config-field-group">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                        <label for="paystackPublicKey" style="margin-bottom: 0;">Paystack Public Key <span style="color: var(--danger);">*</span></label>
+                        <a href="https://dashboard.paystack.com/#/settings/developer" target="_blank" rel="noopener noreferrer" class="link-external-hint">
+                            <i class="fa-solid fa-arrow-up-right-from-square"></i> Get from Paystack Dashboard
+                        </a>
+                    </div>
+                    <div class="config-input-wrap">
+                        <i class="fa-solid fa-key"></i>
+                        <input type="text" id="paystackPublicKey" class="config-input" placeholder="pk_test_... or pk_live_..." autocomplete="off">
+                    </div>
+                    <span class="field-hint" id="paystackKeyHint">Enter your Paystack Public Key. The storefront checkout only uses the Public Key (never use your Secret Key here).</span>
+                </div>
+
+                <!-- Currency & Settlement -->
+                <div class="config-two-col">
+                    <div class="config-field-group">
+                        <label>Currency</label>
+                        <input type="text" class="config-input" value="GHS (Ghana Cedis - GH₵)" disabled>
+                    </div>
+                    <div class="config-field-group">
+                        <label>Active Channels</label>
+                        <div class="channels-pills-row">
+                            <span class="channel-pill"><i class="fa-solid fa-mobile-screen"></i> MTN MoMo</span>
+                            <span class="channel-pill"><i class="fa-solid fa-mobile-screen"></i> Telecel Cash</span>
+                            <span class="channel-pill"><i class="fa-solid fa-mobile-screen"></i> AT Money</span>
+                            <span class="channel-pill"><i class="fa-solid fa-credit-card"></i> Visa/MC</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Status Box -->
+                <div class="paystack-status-box" id="paystackConfigStatusBox">
+                    <div class="status-icon"><i class="fa-solid fa-circle-info"></i></div>
+                    <div class="status-text">
+                        <strong id="statusBoxTitle">Test Mode Active</strong>
+                        <p id="statusBoxDesc">All transactions will be routed through the Paystack Sandbox. No real money will be charged.</p>
+                    </div>
+                </div>
+
+                <!-- Modal Action Buttons -->
+                <div class="paystack-modal-actions">
+                    <a href="https://dashboard.paystack.com/#/transactions" target="_blank" rel="noopener noreferrer" class="btn-topbar">
+                        <i class="fa-solid fa-chart-line"></i>
+                        Paystack Dashboard
+                    </a>
+                    <div style="display: flex; gap: 10px;">
+                        <button type="button" class="btn-topbar" id="btnResetPaystackDefaults">
+                            Reset Defaults
+                        </button>
+                        <button type="submit" class="btn-topbar btn-save-paystack" id="btnSavePaystackSettings">
+                            <i class="fa-solid fa-floppy-disk"></i>
+                            Save Settings
+                        </button>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
 

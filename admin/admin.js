@@ -43,6 +43,92 @@
     const clearAllOrdersBtn = document.getElementById("clearAllOrdersBtn");
     const createDemoOrderBtn = document.getElementById("createDemoOrderBtn");
     const btnPlaceSampleOrder = document.getElementById("btnPlaceSampleOrder");
+    const btnPaystackConfig = document.getElementById("btnPaystackConfig");
+    const paystackSettingsModal = document.getElementById("paystackSettingsModal");
+    const closePaystackModalBtn = document.getElementById("closePaystackModalBtn");
+    const paystackSettingsForm = document.getElementById("paystackSettingsForm");
+    const paystackPublicKeyInput = document.getElementById("paystackPublicKey");
+    const btnResetPaystackDefaults = document.getElementById("btnResetPaystackDefaults");
+
+    // Paystack Configuration Management
+    const DEFAULT_PAYSTACK_CONFIG = {
+        publicKey: "pk_test_d3a86c4f09a84d4399e829f0183b194a28938d21",
+        isLive: false,
+        currency: "GHS",
+        businessName: "Jarvis Computer Consult"
+    };
+
+    function getPaystackConfig() {
+        try {
+            const stored = JSON.parse(localStorage.getItem("paystack_config"));
+            if (stored && stored.publicKey) return stored;
+        } catch (e) {}
+        return { ...DEFAULT_PAYSTACK_CONFIG };
+    }
+
+    function savePaystackConfig(config) {
+        localStorage.setItem("paystack_config", JSON.stringify(config));
+    }
+
+    function openPaystackModal() {
+        if (!paystackSettingsModal) return;
+        const config = getPaystackConfig();
+        const envRadios = document.querySelectorAll('input[name="paystackEnv"]');
+        const labelTest = document.getElementById("labelTestMode");
+        const labelLive = document.getElementById("labelLiveMode");
+
+        if (paystackPublicKeyInput) paystackPublicKeyInput.value = config.publicKey || "";
+
+        if (config.isLive) {
+            envRadios.forEach(r => { if (r.value === "live") r.checked = true; });
+            if (labelLive) labelLive.classList.add("selected");
+            if (labelTest) labelTest.classList.remove("selected");
+        } else {
+            envRadios.forEach(r => { if (r.value === "test") r.checked = true; });
+            if (labelTest) labelTest.classList.add("selected");
+            if (labelLive) labelLive.classList.remove("selected");
+        }
+
+        updatePaystackStatusBox(config.isLive, config.publicKey || "");
+        paystackSettingsModal.classList.add("active");
+    }
+
+    function closePaystackModal() {
+        if (paystackSettingsModal) {
+            paystackSettingsModal.classList.remove("active");
+        }
+    }
+
+    function updatePaystackStatusBox(isLive, key) {
+        const box = document.getElementById("paystackConfigStatusBox");
+        const title = document.getElementById("statusBoxTitle");
+        const desc = document.getElementById("statusBoxDesc");
+        const hint = document.getElementById("paystackKeyHint");
+        if (!box || !title || !desc) return;
+
+        if (isLive) {
+            box.classList.remove("test-mode");
+            title.textContent = "Live Production Mode Active";
+            desc.textContent = "Real payments in GH₵ will be authorized and processed directly to your Paystack merchant balance and settlement bank.";
+            if (hint) {
+                if (key && key.startsWith("pk_live_")) {
+                    hint.textContent = "✓ Valid Live Public Key format detected.";
+                    hint.style.color = "var(--success)";
+                } else {
+                    hint.textContent = "Notice: Live Mode selected. Please ensure your Public Key begins with pk_live_";
+                    hint.style.color = "var(--danger)";
+                }
+            }
+        } else {
+            box.classList.add("test-mode");
+            title.textContent = "Test Sandbox Mode Active";
+            desc.textContent = "Simulated payments can be made on the checkout page without debiting actual funds. Perfect for testing and demonstration.";
+            if (hint) {
+                hint.textContent = "Public Key should start with pk_test_ (Sandbox test key).";
+                hint.style.color = "var(--text-muted)";
+            }
+        }
+    }
 
     // DOM Elements - Modal
     const adminOrderModal = document.getElementById("adminOrderModal");
@@ -362,6 +448,15 @@
             modalPaymentStatus.textContent = order.paymentStatus.toUpperCase();
             modalPaymentStatus.className = order.paymentStatus === "Paid" ? "pill-status paid" : "pill-status pending";
         }
+        const modalPaystackRef = document.getElementById("modalPaystackRef");
+        if (modalPaystackRef) {
+            if (order.paystackReference) {
+                modalPaystackRef.style.display = "block";
+                modalPaystackRef.textContent = `Paystack Ref: ${order.paystackReference}`;
+            } else {
+                modalPaystackRef.style.display = "none";
+            }
+        }
         if (modalDeliverySpeed) {
             modalDeliverySpeed.textContent = `Shipping Package: ${order.deliverySpeed.toUpperCase()} (GH₵ ${order.deliveryCost || 35}.00)`;
         }
@@ -640,6 +735,94 @@
         if (modalPrintBtn) {
             modalPrintBtn.addEventListener("click", function () {
                 window.print();
+            });
+        }
+
+        // Paystack Gateway Settings Modal Listeners
+        if (btnPaystackConfig) {
+            btnPaystackConfig.addEventListener("click", openPaystackModal);
+        }
+
+        if (closePaystackModalBtn) {
+            closePaystackModalBtn.addEventListener("click", closePaystackModal);
+        }
+
+        if (paystackSettingsModal) {
+            paystackSettingsModal.addEventListener("click", function (e) {
+                if (e.target === paystackSettingsModal) closePaystackModal();
+            });
+        }
+
+        const envRadioInputs = document.querySelectorAll('input[name="paystackEnv"]');
+        const labelTestMode = document.getElementById("labelTestMode");
+        const labelLiveMode = document.getElementById("labelLiveMode");
+
+        envRadioInputs.forEach(radio => {
+            radio.addEventListener("change", function () {
+                const isLive = this.value === "live";
+                if (isLive) {
+                    if (labelLiveMode) labelLiveMode.classList.add("selected");
+                    if (labelTestMode) labelTestMode.classList.remove("selected");
+                } else {
+                    if (labelTestMode) labelTestMode.classList.add("selected");
+                    if (labelLiveMode) labelLiveMode.classList.remove("selected");
+                }
+                const currentKey = paystackPublicKeyInput ? paystackPublicKeyInput.value.trim() : "";
+                updatePaystackStatusBox(isLive, currentKey);
+            });
+        });
+
+        if (paystackPublicKeyInput) {
+            paystackPublicKeyInput.addEventListener("input", function () {
+                const selectedEnvRadio = document.querySelector('input[name="paystackEnv"]:checked');
+                const isLive = selectedEnvRadio ? selectedEnvRadio.value === "live" : false;
+                updatePaystackStatusBox(isLive, this.value.trim());
+            });
+        }
+
+        if (btnResetPaystackDefaults) {
+            btnResetPaystackDefaults.addEventListener("click", function () {
+                if (confirm("Reset Paystack settings to default Test Sandbox mode?")) {
+                    savePaystackConfig(DEFAULT_PAYSTACK_CONFIG);
+                    openPaystackModal();
+                    showToast("Paystack Reset", "Default sandbox configuration restored.");
+                }
+            });
+        }
+
+        if (paystackSettingsForm) {
+            paystackSettingsForm.addEventListener("submit", function (e) {
+                e.preventDefault();
+                const selectedEnvRadio = document.querySelector('input[name="paystackEnv"]:checked');
+                const isLive = selectedEnvRadio ? selectedEnvRadio.value === "live" : false;
+                const key = paystackPublicKeyInput ? paystackPublicKeyInput.value.trim() : "";
+
+                if (!key) {
+                    alert("Please provide a valid Paystack Public Key.");
+                    if (paystackPublicKeyInput) paystackPublicKeyInput.focus();
+                    return;
+                }
+
+                if (isLive && !key.startsWith("pk_live_")) {
+                    if (!confirm("Your public key does not begin with 'pk_live_'. Are you sure you want to save this key for Live Mode?")) {
+                        return;
+                    }
+                }
+
+                const newConfig = {
+                    publicKey: key,
+                    isLive: isLive,
+                    currency: "GHS",
+                    businessName: "Jarvis Computer Consult",
+                    updatedAt: new Date().toISOString()
+                };
+
+                savePaystackConfig(newConfig);
+                closePaystackModal();
+                showToast(
+                    "Paystack Configured Successfully!",
+                    `Mode: ${isLive ? "LIVE PRODUCTION" : "TEST SANDBOX"} | Key: ${key.slice(0, 12)}...`
+                );
             });
         }
 
