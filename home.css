@@ -312,63 +312,6 @@ a {
     color: #b91c1c !important;
 }
 
-.header-admin-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 7px;
-    padding: 7px 13px;
-    background: #0f172a;
-    color: #ffffff;
-    border: 1px solid rgba(108, 77, 246, 0.4);
-    border-radius: 8px;
-    font-size: 12px;
-    font-weight: 700;
-    text-decoration: none;
-    cursor: pointer;
-    transition: all 0.25s ease;
-}
-
-.header-admin-btn i {
-    color: #a78bfa;
-    font-size: 13px;
-    transition: transform 0.2s ease;
-}
-
-.header-admin-btn:hover {
-    background: var(--primary);
-    color: #ffffff;
-    border-color: var(--primary);
-    transform: translateY(-1px);
-    box-shadow: 0 4px 14px rgba(108, 77, 246, 0.35);
-}
-
-.header-admin-btn:hover i {
-    color: #ffffff;
-    transform: scale(1.1);
-}
-
-.nav-admin-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    color: var(--primary) !important;
-    font-weight: 700;
-    padding: 6px 12px !important;
-    border-radius: 6px;
-    background: rgba(108, 77, 246, 0.08);
-    transition: all 0.2s ease;
-}
-
-.nav-admin-link i {
-    font-size: 13px;
-}
-
-.nav-admin-link:hover {
-    background: var(--primary);
-    color: #ffffff !important;
-    transform: translateY(-1px);
-}
-
 .cart-button {
     width: 40px;
     height: 40px;
@@ -2016,12 +1959,6 @@ a {
     .nav-links a.active {
         background: #c91818;
         color: #ffffff;
-    }
-
-    .nav-links a.nav-admin-link {
-        background: rgba(108, 77, 246, 0.25);
-        color: #ffffff !important;
-        border: 1px solid rgba(108, 77, 246, 0.5);
     }
 
     .hero {
